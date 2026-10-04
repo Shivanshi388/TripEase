@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import DestinationPage from "./pages/DestinationPage";

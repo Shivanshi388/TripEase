@@ -82,12 +82,10 @@ function Home() {
                 <strong>100+</strong>
                 <span>Destinations</span>
               </div>
-
               <div>
                 <strong>500+</strong>
                 <span>Trip Ideas</span>
               </div>
-
               <div>
                 <strong>4.8/5</strong>
                 <span>User Rating</span>
