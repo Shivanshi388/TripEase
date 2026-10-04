@@ -1,16 +1,10 @@
-import { Globe, MapPin } from "lucide-react";
-
 function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-grid">
         <div>
-          <div className="footer-logo">
-            <MapPin size={22} />
-            TripEase
-          </div>
-
-          <p className="footer-description">
+          <div className="footer-logo">✈️ TripEase</div>
+          <p>
             Your smarter way to discover destinations, plan trips and travel
             better.
           </p>
@@ -37,8 +31,8 @@ function Footer() {
         </div>
       </div>
 
-      <div className="container footer-bottom">
-        <p>© 2026 TripEase. Built for smarter travel.</p>
+      <div className="footer-bottom">
+        © 2026 TripEase. Built for smarter travel.
       </div>
     </footer>
   );
