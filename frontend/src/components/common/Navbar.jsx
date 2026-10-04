@@ -1,5 +1,6 @@
 import { Map, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -7,28 +8,29 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="container navbar-inner">
-        <a href="/" className="navbar-logo">
+        <Link to="/" className="navbar-logo">
           <span className="navbar-logo-icon">
             <Map size={22} />
           </span>
           <span>Trip<span>Ease</span></span>
-        </a>
+        </Link>
 
         <nav className={`navbar-links ${menuOpen ? "open" : ""}`}>
-          <a href="/">Home</a>
-          <a href="/explore">Explore</a>
-          <a href="/plan-trip">Plan a Trip</a>
-          <a href="/my-trips">My Trips</a>
+          <Link to="/">Home</Link>
+          <Link to="/explore">Explore</Link>
+          <Link to="/plan-trip">Plan a Trip</Link>
+          <Link to="/my-trips">My Trips</Link>
+          <Link to="/wishlist">Wishlist</Link>
         </nav>
 
         <div className="navbar-actions">
-          <a href="/login" className="navbar-login">
+          <Link to="/login" className="navbar-login">
             Login
-          </a>
+          </Link>
 
-          <a href="/signup" className="navbar-signup">
+          <Link to="/signup" className="navbar-signup">
             Get Started
-          </a>
+          </Link>
 
           <button
             className="navbar-menu"
