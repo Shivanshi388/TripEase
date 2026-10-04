@@ -246,3 +246,26 @@ img {
   padding: 1rem 0;
   text-align: center;
 }
+.destination-details {
+  padding: 4rem 0;
+}
+
+.destination-banner {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.destination-details ul {
+  margin: 1rem 0 2rem;
+  padding-left: 1.5rem;
+}

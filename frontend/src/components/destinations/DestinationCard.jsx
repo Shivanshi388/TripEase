@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 function DestinationCard({ destination }) {
   return (
     <div className="destination-card">
@@ -10,9 +11,12 @@ function DestinationCard({ destination }) {
         <h3>{destination.name}</h3>
         <p>{destination.description}</p>
 
-        <button className="btn btn-primary">
+        <Link
+          to={`/destination/${destination.id}`}
+          className="btn btn-primary"
+        >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );
