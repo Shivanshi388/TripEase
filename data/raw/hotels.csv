@@ -1,0 +1,21 @@
+hotel_id,destination_id,hotel_name,hotel_type,price_per_night,rating,amenities,distance_from_center_km
+H001,D001,Goa Beach Resort,Resort,1800,4.4,Pool-WiFi-Parking,2.5
+H002,D002,Manali Mountain Stay,Hotel,1500,4.3,WiFi-Parking-Restaurant,1.8
+H003,D003,Jaipur Heritage Inn,Heritage,1400,4.5,WiFi-Restaurant-AC,2.0
+H004,D004,Rishikesh Riverside Hotel,Hotel,1200,4.2,WiFi-Parking-Restaurant,1.5
+H005,D005,Munnar Green Valley Resort,Resort,1700,4.5,Pool-WiFi-Restaurant,3.0
+H006,D006,Udaipur Lake View Hotel,Hotel,1600,4.6,WiFi-Restaurant-AC,1.2
+H007,D007,Varanasi Ganga Residency,Hotel,1000,4.2,WiFi-Restaurant,2.0
+H008,D008,Shimla Hill View Hotel,Hotel,1500,4.3,WiFi-Parking-Heating,2.5
+H009,D009,Andaman Coral Resort,Resort,2800,4.7,Pool-WiFi-Beach,4.0
+H010,D010,Ladakh Mountain Lodge,Lodge,2200,4.6,WiFi-Parking-Restaurant,2.5
+H011,D011,Delhi City Inn,Hotel,1400,4.1,WiFi-AC-Restaurant,1.5
+H012,D012,Mumbai Sea View Hotel,Hotel,2500,4.4,WiFi-Parking-Restaurant,2.0
+H013,D013,Kolkata Cultural Stay,Hotel,1200,4.2,WiFi-Restaurant-AC,1.8
+H014,D014,Agra Taj View Hotel,Hotel,1100,4.4,WiFi-Parking-Restaurant,1.5
+H015,D015,Amritsar Golden Inn,Hotel,1000,4.3,WiFi-Restaurant-Parking,1.2
+H016,D016,Coorg Coffee Estate Resort,Resort,1600,4.5,Pool-WiFi-Parking,4.0
+H017,D017,Ooty Garden Hotel,Hotel,1400,4.3,WiFi-Restaurant-Parking,2.0
+H018,D018,Alappuzha Backwater Resort,Resort,1900,4.5,Pool-WiFi-Boating,3.5
+H019,D019,Pushkar Desert Inn,Hotel,900,4.2,WiFi-Restaurant-Parking,1.0
+H020,D020,Darjeeling Tea Garden Hotel,Hotel,1500,4.5,WiFi-Restaurant-Heating,2.5
