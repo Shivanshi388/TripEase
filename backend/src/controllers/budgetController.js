@@ -62,10 +62,23 @@ const getBudgetAnalytics = asyncHandler(async (req, res) => {
   });
 });
 
+const getBudgetAlerts = asyncHandler(async (req, res) => {
+  const alerts = await budgetService.getBudgetAlerts(
+    req.user.id,
+    req.params.tripId
+  );
+
+  res.status(200).json({
+    success: true,
+    data: alerts,
+  });
+});
+
 module.exports = {
   createExpense,
   getTripExpenses,
   getBudgetSummary,
   deleteExpense,
   getBudgetAnalytics,
+  getBudgetAlerts,
 };

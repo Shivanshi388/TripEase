@@ -139,10 +139,46 @@ const getBudgetAnalytics = async (userId, tripId) => {
   };
 };
 
+const getBudgetAlerts = async (userId, tripId) => {
+  const summary = await getBudgetSummary(userId, tripId);
+
+  const alerts = [];
+
+  if (summary.budget <= 0) {
+    return {
+      status: "no_budget",
+      alerts: ["No budget has been set for this trip."],
+    };
+  }
+
+  if (summary.percentageUsed >= 100) {
+    alerts.push("Budget exceeded.");
+  } else if (summary.percentageUsed >= 90) {
+    alerts.push("You have used more than 90% of your budget.");
+  } else if (summary.percentageUsed >= 75) {
+    alerts.push("You have used more than 75% of your budget.");
+  }
+
+  return {
+    status:
+      summary.percentageUsed >= 100
+        ? "exceeded"
+        : summary.percentageUsed >= 75
+        ? "warning"
+        : "safe",
+    alerts,
+    budget: summary.budget,
+    totalSpent: summary.totalSpent,
+    remaining: summary.remaining,
+    percentageUsed: summary.percentageUsed,
+  };
+};
+
 module.exports = {
   createExpense,
   getTripExpenses,
   getBudgetSummary,
   deleteExpense,
   getBudgetAnalytics,
+  getBudgetAlerts,
 };
