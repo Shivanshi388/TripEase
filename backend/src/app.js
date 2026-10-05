@@ -8,6 +8,7 @@ const wishlistRoutes = require("./routes/wishlistRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
 const userRoutes = require("./routes/userRoutes");
+const itineraryRoutes = require("./routes/itineraryRoutes");
 
 const app = express();
 
@@ -29,5 +30,6 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/itinerary", itineraryRoutes);
 
 module.exports = app;
