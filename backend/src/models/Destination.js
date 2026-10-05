@@ -6,36 +6,47 @@ const destinationSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 150,
+      index: true,
     },
 
     country: {
       type: String,
       required: true,
       trim: true,
+      default: "India",
     },
 
-    city: {
+    state: {
       type: String,
-      required: true,
       trim: true,
     },
 
     description: {
       type: String,
       trim: true,
-      default: "",
+      maxlength: 1000,
+    },
+
+    image: {
+      type: String,
+      trim: true,
     },
 
     category: {
       type: String,
-      trim: true,
-      default: "",
-    },
-
-    averageCost: {
-      type: Number,
-      min: 0,
-      default: 0,
+      enum: [
+        "heritage",
+        "nature",
+        "adventure",
+        "beach",
+        "spiritual",
+        "city",
+        "wildlife",
+        "other",
+      ],
+      default: "other",
+      index: true,
     },
 
     rating: {
@@ -45,15 +56,48 @@ const destinationSchema = new mongoose.Schema(
       default: 0,
     },
 
-    imageUrl: {
+    bestTime: {
       type: String,
       trim: true,
-      default: "",
+    },
+
+    budgetMin: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+
+    budgetMax: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+
+    attractions: {
+      type: [String],
+      default: [],
+    },
+
+    activities: {
+      type: [String],
+      default: [],
+    },
+
+    tags: {
+      type: [String],
+      default: [],
     },
   },
   {
     timestamps: true,
   }
 );
+
+destinationSchema.index({
+  name: "text",
+  description: "text",
+  state: "text",
+  tags: "text",
+});
 
 module.exports = mongoose.model("Destination", destinationSchema);

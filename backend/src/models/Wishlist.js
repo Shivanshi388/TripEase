@@ -2,25 +2,24 @@ const mongoose = require("mongoose");
 
 const wishlistSchema = new mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
-
-    destination: {
+    destinationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Destination",
       required: true,
+      index: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 wishlistSchema.index(
-  { user: 1, destination: 1 },
+  { userId: 1, destinationId: 1 },
   { unique: true }
 );
 

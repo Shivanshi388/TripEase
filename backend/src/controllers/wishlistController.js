@@ -1,61 +1,41 @@
-const Wishlist = require("../models/Wishlist");
+const asyncHandler = require("../utils/asyncHandler");
+const wishlistService = require("../services/wishlistService");
 
-const getWishlist = async (req, res) => {
-  const wishlist = await Wishlist.find({ user: req.user.id })
-    .populate("destination")
-    .sort({ createdAt: -1 });
+const getWishlist = asyncHandler(async (req, res) => {
+  const wishlist = await wishlistService.getWishlist(req.user.id);
 
-  res.json({
-    count: wishlist.length,
-    wishlist,
+  res.status(200).json({
+    success: true,
+    data: wishlist,
   });
-};
+});
 
-const addToWishlist = async (req, res) => {
-  const { destination } = req.body;
+const addToWishlist = asyncHandler(async (req, res) => {
+  const wishlistItem = await wishlistService.addToWishlist(
+    req.user.id,
+    req.body.destinationId
+  );
 
-  if (!destination) {
-    return res.status(400).json({
-      message: "Destination is required",
-    });
-  }
+  const populatedItem = await wishlistItem.populate("destinationId");
 
-  try {
-    const wishlistItem = await Wishlist.create({
-      user: req.user.id,
-      destination,
-    });
-
-    const populatedItem = await wishlistItem.populate("destination");
-
-    res.status(201).json(populatedItem);
-  } catch (error) {
-    if (error.code === 11000) {
-      return res.status(409).json({
-        message: "Destination already exists in wishlist",
-      });
-    }
-
-    throw error;
-  }
-};
-
-const removeFromWishlist = async (req, res) => {
-  const deletedItem = await Wishlist.findOneAndDelete({
-    _id: req.params.id,
-    user: req.user.id,
+  res.status(201).json({
+    success: true,
+    message: "Destination added to wishlist",
+    data: populatedItem,
   });
+});
 
-  if (!deletedItem) {
-    return res.status(404).json({
-      message: "Wishlist item not found",
-    });
-  }
+const removeFromWishlist = asyncHandler(async (req, res) => {
+  await wishlistService.removeFromWishlist(
+    req.user.id,
+    req.params.destinationId
+  );
 
-  res.json({
+  res.status(200).json({
+    success: true,
     message: "Destination removed from wishlist",
   });
-};
+});
 
 module.exports = {
   getWishlist,

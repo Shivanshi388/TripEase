@@ -10,6 +10,8 @@ const budgetRoutes = require("./routes/budgetRoutes");
 const userRoutes = require("./routes/userRoutes");
 const itineraryRoutes = require("./routes/itineraryRoutes");
 const tripDetailsRoutes = require("./routes/tripDetailsRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+const weatherRoutes = require("./routes/weatherRoutes");
 
 const app = express();
 
@@ -33,5 +35,9 @@ app.use("/api/budget", budgetRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/itinerary", itineraryRoutes);
 app.use("/api/trip-details", tripDetailsRoutes);
+app.use("/api/users/me", profileRoutes);
+app.use("/api/weather", weatherRoutes);
 
 module.exports = app;
+
+

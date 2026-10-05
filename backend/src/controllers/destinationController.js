@@ -1,25 +1,30 @@
-const Destination = require("../models/Destination");
+const asyncHandler = require("../utils/asyncHandler");
+const destinationService = require("../services/destinationService");
 
-const getDestinations = async (req, res) => {
-  const destinations = await Destination.find().sort({ name: 1 });
-
-  res.json({
-    count: destinations.length,
-    destinations,
+const getDestinations = asyncHandler(async (req, res) => {
+  const destinations = await destinationService.getDestinations({
+    search: req.query.search,
+    category: req.query.category,
+    minBudget: req.query.minBudget,
+    maxBudget: req.query.maxBudget,
   });
-};
 
-const getDestinationById = async (req, res) => {
-  const destination = await Destination.findById(req.params.id);
+  res.status(200).json({
+    success: true,
+    data: destinations,
+  });
+});
 
-  if (!destination) {
-    return res.status(404).json({
-      message: "Destination not found",
-    });
-  }
+const getDestinationById = asyncHandler(async (req, res) => {
+  const destination = await destinationService.getDestinationById(
+    req.params.id
+  );
 
-  res.json(destination);
-};
+  res.status(200).json({
+    success: true,
+    data: destination,
+  });
+});
 
 module.exports = {
   getDestinations,
