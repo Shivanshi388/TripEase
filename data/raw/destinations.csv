@@ -1,0 +1,21 @@
+destination_id,name,country,state,city,category,best_season,avg_daily_cost,avg_hotel_cost,avg_food_cost,avg_local_transport_cost,avg_activity_cost,latitude,longitude,rating,popularity
+D001,Goa,India,Goa,Panaji,Beach,Nov-Feb,2500,1200,600,300,400,15.4909,73.8278,4.6,95
+D002,Manali,India,Himachal Pradesh,Manali,Mountains,Oct-Jun,2200,1000,550,250,400,32.2396,77.1887,4.5,92
+D003,Jaipur,India,Rajasthan,Jaipur,Heritage,Oct-Mar,2000,900,500,250,350,26.9124,75.7873,4.5,90
+D004,Rishikesh,India,Uttarakhand,Rishikesh,Adventure,Sep-Jun,1800,800,450,200,350,30.0869,78.2676,4.4,88
+D005,Munnar,India,Kerala,Munnar,Nature,Oct-May,2300,1000,550,250,400,10.0889,77.0595,4.6,87
+D006,Udaipur,India,Rajasthan,Udaipur,Heritage,Oct-Mar,2100,950,500,250,400,24.5854,73.7125,4.6,85
+D007,Varanasi,India,Uttar Pradesh,Varanasi,Spiritual,Oct-Mar,1600,700,400,200,300,25.3176,82.9739,4.4,86
+D008,Shimla,India,Himachal Pradesh,Shimla,Mountains,Mar-Jun,2100,950,500,250,400,31.1048,77.1734,4.4,84
+D009,Andaman Islands,India,Andaman and Nicobar Islands,Port Blair,Beach,Nov-May,3500,1800,700,400,600,11.6234,92.7265,4.7,82
+D010,Ladakh,India,Ladakh,Leh,Adventure,May-Sep,3000,1400,600,400,600,34.1526,77.5771,4.7,80
+D011,Delhi,India,Delhi,New Delhi,City,Oct-Mar,2000,900,500,300,300,28.6139,77.2090,4.3,94
+D012,Mumbai,India,Maharashtra,Mumbai,City,Oct-Feb,3000,1500,700,400,400,19.0760,72.8777,4.4,93
+D013,Kolkata,India,West Bengal,Kolkata,Culture,Oct-Mar,1800,800,450,250,300,22.5726,88.3639,4.3,82
+D014,Agra,India,Uttar Pradesh,Agra,Heritage,Oct-Mar,1700,750,400,250,300,27.1767,78.0081,4.4,91
+D015,Amritsar,India,Punjab,Amritsar,Heritage,Oct-Mar,1700,700,400,250,350,31.6340,74.8723,4.5,83
+D016,Coorg,India,Karnataka,Madikeri,Nature,Oct-May,2200,950,500,300,450,12.4244,75.7382,4.5,79
+D017,Ooty,India,Tamil Nadu,Ooty,Nature,Oct-Jun,2000,900,500,250,350,11.4102,76.6950,4.4,81
+D018,Alappuzha,India,Kerala,Alappuzha,Backwaters,Nov-Feb,2400,1100,550,300,450,9.4981,76.3388,4.5,77
+D019,Pushkar,India,Rajasthan,Pushkar,Spiritual,Oct-Mar,1600,650,400,200,350,26.4897,74.5511,4.4,76
+D020,Darjeeling,India,West Bengal,Darjeeling,Mountains,Mar-May,2100,950,500,250,400,27.0410,88.2663,4.5,80
