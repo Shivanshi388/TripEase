@@ -1,8 +1,13 @@
-
 const express = require("express");
 const cors = require("cors");
-const tripRoutes = require("./routes/tripRoutes");
+
 const authRoutes = require("./routes/authRoutes");
+const tripRoutes = require("./routes/tripRoutes");
+const destinationRoutes = require("./routes/destinationRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
+const recommendationRoutes = require("./routes/recommendationRoutes");
+const budgetRoutes = require("./routes/budgetRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -16,7 +21,13 @@ app.get("/", (req, res) => {
   });
 });
 
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/trips", tripRoutes);
+app.use("/api/destinations", destinationRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/recommendations", recommendationRoutes);
+app.use("/api/budget", budgetRoutes);
+app.use("/api/users", userRoutes);
 
 module.exports = app;
