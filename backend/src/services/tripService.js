@@ -1,4 +1,5 @@
 const Trip = require("../models/Trip");
+const Expense = require("../models/Expense");
 const ApiError = require("../utils/ApiError");
 
 const createTrip = async (userId, tripData) => {
@@ -48,6 +49,11 @@ const deleteTrip = async (userId, tripId) => {
   if (!trip) {
     throw new ApiError(404, "Trip not found");
   }
+
+  await Expense.deleteMany({
+    tripId: trip._id,
+    userId,
+  });
 
   return trip;
 };
