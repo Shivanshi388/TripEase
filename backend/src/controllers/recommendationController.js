@@ -1,4 +1,5 @@
 const mlService = require("../services/mlService");
+const Trip = require("../models/Trip");
 
 const getRecommendations = async (req, res, next) => {
   try {
@@ -17,6 +18,22 @@ const getRecommendations = async (req, res, next) => {
       });
     }
 
+    const trips = await Trip.find({ userId: req.user.id })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .select("destination budget travelers status itinerary startDate endDate -_id")
+      .lean();
+
+    const tripHistory = trips.map((trip) => ({
+      destination: trip.destination,
+      budget: trip.budget,
+      travelers: trip.travelers,
+      status: trip.status,
+      itinerary: trip.itinerary || [],
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+    }));
+
     const result = await mlService.getRecommendations({
       userId: req.user.id,
       destination,
@@ -24,6 +41,7 @@ const getRecommendations = async (req, res, next) => {
       days,
       interests,
       travelStyle,
+      tripHistory,
     });
 
     res.status(200).json({
