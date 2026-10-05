@@ -18,6 +18,7 @@ const getRecommendations = async (req, res, next) => {
     }
 
     const result = await mlService.getRecommendations({
+      userId: req.user.id,
       destination,
       budget,
       days,
