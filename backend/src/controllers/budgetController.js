@@ -50,9 +50,22 @@ const deleteExpense = asyncHandler(async (req, res) => {
   });
 });
 
+const getBudgetAnalytics = asyncHandler(async (req, res) => {
+  const analytics = await budgetService.getBudgetAnalytics(
+    req.user.id,
+    req.params.tripId
+  );
+
+  res.status(200).json({
+    success: true,
+    data: analytics,
+  });
+});
+
 module.exports = {
   createExpense,
   getTripExpenses,
   getBudgetSummary,
   deleteExpense,
+  getBudgetAnalytics,
 };

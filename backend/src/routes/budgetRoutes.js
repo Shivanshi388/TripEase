@@ -14,6 +14,7 @@ const {
   getTripExpenses,
   getBudgetSummary,
   deleteExpense,
+  getBudgetAnalytics,
 } = require("../controllers/budgetController");
 
 // All budget routes require authentication
@@ -39,6 +40,11 @@ router.delete(
   expenseIdValidator,
   validateMiddleware,
   deleteExpense
+);
+
+router.get(
+  "/trips/:tripId/analytics",
+  getBudgetAnalytics
 );
 
 module.exports = router;

@@ -94,9 +94,55 @@ const deleteExpense = async (userId, expenseId) => {
   return expense;
 };
 
+const getBudgetAnalytics = async (userId, tripId) => {
+  const trip = await Trip.findOne({
+    _id: tripId,
+    userId,
+  });
+
+  if (!trip) {
+    throw new ApiError(404, "Trip not found");
+  }
+
+  const expenses = await Expense.find({
+    tripId,
+    userId,
+  }).sort({ date: 1 });
+
+  const dailySpending = {};
+
+  expenses.forEach((expense) => {
+    const date = expense.date.toISOString().split("T")[0];
+
+    dailySpending[date] =
+      (dailySpending[date] || 0) + expense.amount;
+  });
+
+  const categoryTotals = {};
+
+  expenses.forEach((expense) => {
+    categoryTotals[expense.category] =
+      (categoryTotals[expense.category] || 0) + expense.amount;
+  });
+
+  const totalSpent = expenses.reduce(
+    (total, expense) => total + expense.amount,
+    0
+  );
+
+  return {
+    tripId,
+    budget: trip.budget || 0,
+    totalSpent,
+    dailySpending,
+    categoryTotals,
+  };
+};
+
 module.exports = {
   createExpense,
   getTripExpenses,
   getBudgetSummary,
   deleteExpense,
+  getBudgetAnalytics,
 };
