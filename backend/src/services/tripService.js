@@ -1,5 +1,6 @@
 const Trip = require("../models/Trip");
 const Expense = require("../models/Expense");
+const Itinerary = require("../models/Itinerary");
 const ApiError = require("../utils/ApiError");
 
 const createTrip = async (userId, tripData) => {
@@ -50,10 +51,16 @@ const deleteTrip = async (userId, tripId) => {
     throw new ApiError(404, "Trip not found");
   }
 
-  await Expense.deleteMany({
-    tripId: trip._id,
-    userId,
-  });
+  await Promise.all([
+    Expense.deleteMany({
+      tripId: trip._id,
+      userId,
+    }),
+    Itinerary.deleteMany({
+      tripId: trip._id,
+      userId,
+    }),
+  ]);
 
   return trip;
 };
