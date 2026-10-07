@@ -1,50 +1,84 @@
-cat > src/controllers/budgetController.js <<'EOF'
-const {
-  getBudgetSummary,
-  addExpense,
-} = require("../services/budgetService");
+const asyncHandler = require("../utils/asyncHandler");
+const budgetService = require("../services/budgetService");
 
-const getBudget = async (req, res) => {
-  try {
-    const summary = await getBudgetSummary(
-      req.user.id,
-      req.params.tripId
-    );
+const createExpense = asyncHandler(async (req, res) => {
+  const expense = await budgetService.createExpense(
+    req.user.id,
+    req.body
+  );
 
-    return res.status(200).json(summary);
-  } catch (error) {
-    console.error("Get budget error:", error.message);
+  res.status(201).json({
+    success: true,
+    message: "Expense created successfully",
+    data: expense,
+  });
+});
 
-    return res.status(error.statusCode || 500).json({
-      message: error.statusCode
-        ? error.message
-        : "Unable to fetch budget right now.",
-    });
-  }
-};
+const getTripExpenses = asyncHandler(async (req, res) => {
+  const expenses = await budgetService.getTripExpenses(
+    req.user.id,
+    req.params.tripId
+  );
 
-const createExpense = async (req, res) => {
-  try {
-    const expense = await addExpense(
-      req.user.id,
-      req.params.tripId,
-      req.body
-    );
+  res.status(200).json({
+    success: true,
+    data: expenses,
+  });
+});
 
-    return res.status(201).json(expense);
-  } catch (error) {
-    console.error("Create expense error:", error.message);
+const getBudgetSummary = asyncHandler(async (req, res) => {
+  const summary = await budgetService.getBudgetSummary(
+    req.user.id,
+    req.params.tripId
+  );
 
-    return res.status(error.statusCode || 500).json({
-      message: error.statusCode
-        ? error.message
-        : "Unable to create expense right now.",
-    });
-  }
-};
+  res.status(200).json({
+    success: true,
+    data: summary,
+  });
+});
+
+const deleteExpense = asyncHandler(async (req, res) => {
+  await budgetService.deleteExpense(
+    req.user.id,
+    req.params.id
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Expense deleted successfully",
+  });
+});
+
+const getBudgetAnalytics = asyncHandler(async (req, res) => {
+  const analytics = await budgetService.getBudgetAnalytics(
+    req.user.id,
+    req.params.tripId
+  );
+
+  res.status(200).json({
+    success: true,
+    data: analytics,
+  });
+});
+
+const getBudgetAlerts = asyncHandler(async (req, res) => {
+  const alerts = await budgetService.getBudgetAlerts(
+    req.user.id,
+    req.params.tripId
+  );
+
+  res.status(200).json({
+    success: true,
+    data: alerts,
+  });
+});
 
 module.exports = {
-  getBudget,
   createExpense,
+  getTripExpenses,
+  getBudgetSummary,
+  deleteExpense,
+  getBudgetAnalytics,
+  getBudgetAlerts,
 };
-EOF
