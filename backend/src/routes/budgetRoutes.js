@@ -1,8 +1,16 @@
 const express = require("express");
+const authMiddleware = require("../middleware/authMiddleware");
+const {
+  getBudget,
+  createExpense,
+} = require("../controllers/budgetController");
+
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.json({ message: "Budget routes working" });
-});
+router.use(authMiddleware);
+
+router.get("/:tripId", getBudget);
+
+router.post("/:tripId/expenses", createExpense);
 
 module.exports = router;
