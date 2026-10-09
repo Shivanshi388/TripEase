@@ -1,5 +1,6 @@
 ﻿/* TripEase authentication and profile pages */
-:root {
+
+.auth-page {
   --forest: #173c2b;
   --forest-dark: #0d261b;
   --leaf: #497a56;
@@ -9,18 +10,7 @@
   --warm-white: #fffdf8;
   --charcoal: #20241f;
   --muted: #6e756d;
-  --journey-paper: #fffdf5;
-  --journey-forest: #173c2b;
-  --journey-leaf: #d9e5c7;
-  --journey-line: rgba(255, 253, 245, 0.22);
-  --journey-hover: rgba(255, 253, 245, 0.12);
-}
 
-.app-main--auth {
-  min-height: 68vh;
-}
-
-.auth-page {
   min-height: 68vh;
   display: grid;
   place-items: center;
@@ -28,6 +18,10 @@
   background:
     radial-gradient(ellipse at top left, rgba(157, 181, 156, 0.2), transparent 48%),
     var(--cream);
+}
+
+.app-main--auth {
+  min-height: 68vh;
 }
 
 .auth-card {
@@ -75,6 +69,7 @@
 }
 
 .auth-form input {
+  box-sizing: border-box;
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;

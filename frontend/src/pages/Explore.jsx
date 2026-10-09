@@ -1,6 +1,9 @@
 import { useState } from "react";
 import DestinationFilters from "../components/destinations/DestinationFilters";
 import DestinationCard from "../components/destinations/DestinationCard";
+import images from "../assets/images";
+
+const { goa, manali, jaipur, rishikesh, kerala, coorg } = images;
 
 function Explore() {
   const destinations = [
@@ -9,28 +12,42 @@ function Explore() {
       name: "Goa",
       category: "Beach",
       description: "Sunny beaches and nightlife",
-      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2"
+      image: goa,
     },
     {
       id: 2,
       name: "Manali",
       category: "Mountain",
       description: "Snowy mountains and adventure",
-      image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+      image: manali,
     },
     {
       id: 3,
       name: "Jaipur",
       category: "Heritage",
       description: "Historic forts and palaces",
-      image: "https://images.unsplash.com/photo-1477587458883-47145ed94245"
+      image: jaipur,
     },
     {
       id: 4,
       name: "Rishikesh",
       category: "Adventure",
       description: "River rafting and spirituality",
-      image: "https://images.unsplash.com/photo-1528127269322-539801943592"
+      image: rishikesh,
+    },
+    {
+      id: 5,
+      name: "Kerala",
+      category: "Beach",
+      description: "Tropical beaches and backwaters",
+      image: kerala,
+    },
+    {
+      id: 6,
+      name: "Coorg",
+      category: "Mountain",
+      description: "Hilly terrain and coffee plantations",
+      image: coorg,
     },
   ];
 
@@ -38,45 +55,49 @@ function Explore() {
   const [category, setCategory] = useState("All");
 
   const filteredDestinations = destinations.filter((destination) => {
-    const matchesSearch = destination.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const searchTerm = search.toLowerCase();
+
+    const matchesSearch =
+      destination.name.toLowerCase().includes(searchTerm) ||
+      destination.description.toLowerCase().includes(searchTerm) ||
+      destination.category.toLowerCase().includes(searchTerm);
 
     const matchesCategory =
       category === "All" ||
-      destination.category === category;
+      destination.category.toLowerCase() === category.toLowerCase();
 
     return matchesSearch && matchesCategory;
   });
 
   return (
     <div className="container">
-      <h1>Explore Destinations</h1>
+      <div className="explore-header">
+        <h1>Explore Destinations</h1>
 
-      <DestinationFilters
-        search={search}
-        setSearch={setSearch}
-        category={category}
-        setCategory={setCategory}
-      />
+        <DestinationFilters
+          search={search}
+          setSearch={setSearch}
+          category={category}
+          setCategory={setCategory}
+        />
+      </div>
 
       <div className="destination-grid">
-        {filteredDestinations.map((destination) => (
-          <DestinationCard
-            key={destination.id}
-            destination={destination}
-          />
-        ))}
+        {filteredDestinations.length > 0 ? (
+          filteredDestinations.map((destination) => (
+            <DestinationCard
+              key={destination.id}
+              destination={destination}
+            />
+          ))
+        ) : (
+          <p className="no-results">
+            No destinations found.
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
 export default Explore;
-
-
-  
-
-  
-
-

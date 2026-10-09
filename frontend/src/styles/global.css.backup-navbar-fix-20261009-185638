@@ -487,7 +487,7 @@ img {
 
 /* The navbar no longer pushes the homepage down. */
 .navbar.navbar--nature {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -497,7 +497,6 @@ img {
   border: 0;
   box-shadow: none;
   backdrop-filter: none;
-  transition: background-color 200ms ease, border-color 200ms ease;
 }
 
 .navbar--nature .nav-inner {
@@ -692,6 +691,14 @@ img {
 }*/
 
 /* Keep homepage navigation visible throughout the scroll. */
+.navbar.navbar--nature {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
 
 .navbar.navbar--nature.navbar--scrolled {
   background: var(--journey-forest);
@@ -710,7 +717,48 @@ img {
   }
 }
 
+@media (max-width: 900px) {
+  .navbar--nature .nav-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+  }
 
+  .navbar--nature .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+  }
+
+  .navbar--nature .nav-actions .login-link {
+    display: inline-block;
+    font-size: 18px;
+  }
+
+  .navbar--nature .logo {
+    font-size: 19px;
+  }
+
+  .navbar--nature .small-btn {
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .navbar--nature .nav-links {
+    display: flex;
+    order: 0;
+    width: auto;
+    gap: 20px;
+    flex-wrap: nowrap;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+}
 
 .destination-card-link {
   text-decoration: none;
@@ -725,6 +773,33 @@ img {
   border-radius: 24px;
 }
 @media (max-width: 600px) {
+  .navbar--nature .nav-inner {
+    min-height: 100px;
+    padding-block: 14px;
+  }
+
+  .navbar--nature .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+  }
+
+  .navbar--nature .nav-actions .login-link {
+    display: inline-block;
+    font-size: 18px;
+  }
+
+  .navbar--nature .logo {
+    font-size: 19px;
+  }
+
+  .navbar--nature .small-btn {
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
 
   .home .morph__hero-text {
     padding: 136px 20px 56px;

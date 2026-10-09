@@ -1,4 +1,4 @@
-import Navbar from "../components/common/Navbar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/common/Footer";
 import { useWishlist } from "../context/WishlistContext";
 

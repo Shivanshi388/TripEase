@@ -487,7 +487,7 @@ img {
 
 /* The navbar no longer pushes the homepage down. */
 .navbar.navbar--nature {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -497,7 +497,6 @@ img {
   border: 0;
   box-shadow: none;
   backdrop-filter: none;
-  transition: background-color 200ms ease, border-color 200ms ease;
 }
 
 .navbar--nature .nav-inner {
@@ -691,7 +690,28 @@ img {
   outline-offset: 5px;
 }*/
 
-/* Keep homepage navigation visible throughout the scroll. */
+/*@media (max-width: 900px) {
+  /* Override the old rule that hides Explore on smaller screens. */
+  .navbar--nature .nav-inner {
+    display: flex;
+    flex-wrap: nowwrap;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  /* Keep homepage navigation visible throughout the scroll. */
+
+.navbar.navbar--nature {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
 
 .navbar.navbar--nature.navbar--scrolled {
   background: var(--journey-forest);
@@ -710,9 +730,54 @@ img {
   }
 }
 
+  .navbar--nature .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+  }
 
+  .navbar--nature .nav-actions .login-link {
+    display: inline-block;
+    font-size: 18px;
+  }
 
-.destination-card-link {
+  .navbar--nature .logo {
+    font-size: 19px;
+  }
+
+  .navbar--nature .small-btn {
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .navbar--nature .nav-links {
+    display: flex;
+    order: 0;
+    width: auto;
+    gap: 20px;
+    flex-wrap: nowrap;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  /*.journey-footer__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .journey-footer__brand {
+    grid-column: 1 / -1;
+  }
+
+  .journey-footer__intro {
+    align-items: flex-start;
+    flex-direction: column;
+  }*/
+
+  .destination-card-link {
   text-decoration: none;
   color: inherit;
   display: block;
@@ -724,7 +789,36 @@ img {
   object-fit: cover;
   border-radius: 24px;
 }
+/*}*/
+
 @media (max-width: 600px) {
+  .navbar--nature .nav-inner {
+    min-height: 100px;
+    padding-block: 14px;
+  }
+
+  .navbar--nature .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+  }
+
+  .navbar--nature .nav-actions .login-link {
+    display: inline-block;
+    font-size: 18px;
+  }
+
+  .navbar--nature .logo {
+    font-size: 19px;
+  }
+
+  .navbar--nature .small-btn {
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
 
   .home .morph__hero-text {
     padding: 136px 20px 56px;
@@ -748,6 +842,19 @@ img {
     align-items: flex-start;
     flex-direction: column;
   }*/
+
+  .destination-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.destination-detail-image {
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 24px;
+}
 
 .destination-grid {
     grid-template-columns: 1fr;
@@ -791,6 +898,11 @@ img {
   width: 320px;
 }
 
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
 
 .no-results {
   text-align: center;
@@ -799,7 +911,7 @@ img {
   grid-column: 1 / -1;
 }
 
-.destination-card img {
+destination-card img {
   width: 100%;
   height: 240px;      /* same height for every image */
   object-fit: cover;  /* crops instead of stretching */
