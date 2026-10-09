@@ -91,6 +91,7 @@ function DestinationPage({ destination }) {
             Get Recommendations →
           </a>
         </div>
+      </div>
     </section>
   );
 }
