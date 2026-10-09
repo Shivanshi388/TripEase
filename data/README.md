@@ -103,3 +103,16 @@ backwaters.
 3. Document any transformations and assumptions.
 4. Split suitable datasets into training, validation, and test sets
    before evaluating machine-learning models.
+
+## Processed datasets
+
+### budget_prediction.csv
+- Location: `data/processed/budget_prediction.csv`
+- Source: `data/raw/expenses.csv`
+- Purpose: Development dataset for budget-prediction experiments.
+- Records: 20 sample trip records.
+- Target column: `total_cost`
+- Potential features: `destination_id`, `days`, and `travelers`.
+- `trip_id` is an identifier and should not be used as a predictive feature.
+- Expense components should only be used as predictors if they are known at prediction time; otherwise, they cause target leakage.
+- This small dataset is intended for experimentation, not production deployment. Validate its provenance and collect more representative records before drawing conclusions.
