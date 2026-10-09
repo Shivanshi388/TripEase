@@ -25,29 +25,12 @@ useEffect(() => {
     setWishlist(wishlist.filter((item) => item.id !== id));
   };
 
-  const toggleWishlist = (destination) => {
-  const exists = wishlist.some(
-    (item) => item.id === destination.id
-  );
-
-  if (exists) {
-    setWishlist(
-      wishlist.filter(
-        (item) => item.id !== destination.id
-      )
-    );
-  } else {
-    setWishlist([...wishlist, destination]);
-  }
-};
-
   return (
     <WishlistContext.Provider
       value={{
         wishlist,
         addToWishlist,
         removeFromWishlist,
-        toggleWishlist,
       }}
     >
       {children}
