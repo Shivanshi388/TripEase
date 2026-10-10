@@ -1,4 +1,4 @@
-import destinations from "../data/destinations";
+﻿import destinations from "../data/destinations";
 
 function DestinationPage({ destination }) {
   const place = destinations.find(
@@ -25,29 +25,17 @@ function DestinationPage({ destination }) {
             className="destination-detail-image"
           />
 
-      <div>
-        <span>DESTINATION GUIDE</span>
-        <h1>{place.name}</h1>
-        <p>{place.description}</p>
-
-        <div className="detail-actions">
-          <a href="#my-trips" className="btn btn-primary">
-            Plan a Trip
-          </a>
-
-           <a href="#wishlist" className="btn btn-secondary">
-             ♡ Add to Wishlist
-           </a>
-         </div>
-       </div>
+          <div>
+            <span>DESTINATION GUIDE</span>
+            <h1>{place.name}</h1>
+            <p>{place.description}</p>
 
             <div className="detail-actions">
               <a href="#my-trips" className="btn btn-primary">
                 Plan a Trip
               </a>
-
               <a href="#wishlist" className="btn btn-secondary">
-                ♡ Add to Wishlist
+                Add to Wishlist
               </a>
             </div>
           </div>
@@ -55,25 +43,19 @@ function DestinationPage({ destination }) {
 
         <div className="detail-grid">
           <div className="detail-box">
-            <span>📍</span>
+            <span>Location</span>
             <h3>Location</h3>
             <p>{place.location}</p>
           </div>
 
           <div className="detail-box">
-            <span>⭐</span>
-            <h3>Rating</h3>
-            <p>4.8 / 5</p>
-          </div>
-
-          <div className="detail-box">
-            <span>🌤️</span>
+            <span>Category</span>
             <h3>Best for</h3>
             <p>{place.category}</p>
           </div>
 
           <div className="detail-box">
-            <span>💰</span>
+            <span>Budget</span>
             <h3>Budget</h3>
             <p>{place.budget}</p>
           </div>
@@ -88,9 +70,10 @@ function DestinationPage({ destination }) {
           </p>
 
           <a href="#recommendations" className="btn btn-primary">
-            Get Recommendations →
+            Get Recommendations
           </a>
         </div>
+      </div>
     </section>
   );
 }
