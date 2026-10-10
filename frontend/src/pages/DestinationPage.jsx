@@ -1,19 +1,7 @@
 ﻿import destinations from "../data/destinations";
 
 function DestinationPage({ destination }) {
-  const place = destinations.find(
-    (d) => d.id === Number(destination)
-  );
-
-  if (!place) {
-    return (
-      <section className="page-section">
-        <div className="container">
-          <h1>Destination not found</h1>
-        </div>
-      </section>
-    );
-  }
+  const place = data[destination] || data.goa;
 
   return (
     <section className="page-section">
@@ -45,19 +33,19 @@ function DestinationPage({ destination }) {
           <div className="detail-box">
             <span>Location</span>
             <h3>Location</h3>
-            <p>{place.location}</p>
+            <p>India</p>
           </div>
 
           <div className="detail-box">
             <span>Category</span>
             <h3>Best for</h3>
-            <p>{place.category}</p>
+            <p>Leisure & Adventure</p>
           </div>
 
           <div className="detail-box">
             <span>Budget</span>
             <h3>Budget</h3>
-            <p>{place.budget}</p>
+            <p>Moderate</p>
           </div>
         </div>
 

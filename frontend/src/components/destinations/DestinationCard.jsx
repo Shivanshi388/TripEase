@@ -1,55 +1,34 @@
-﻿import { Heart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Heart } from "lucide-react";
 import { useWishlist } from "../../context/WishlistContext";
 
 function DestinationCard({ destination }) {
-  const { wishlist, toggleWishlist } = useWishlist();
-
-  const isWishlisted = useWishlist().wishlist.some((item) => item.id === destination.id);
-
-  const openDestination = () => {
-    window.location.hash = `destination/${destination.id}`;
-  };
-
+  const { addToWishlist } = useWishlist();
+  
   return (
-    <div
-      className="destination-card"
-      onClick={openDestination}
-    >
+    <div className="destination-card">
       <img
         src={destination.image}
         alt={destination.name}
       />
 
+      <button
+        onClick={() => addToWishlist(destination)}
+        className="wishlist-btn"
+     > 
+        <Heart size={18} />
+      </button>
+
       <div className="destination-content">
-        <div className="destination-header">
-          <h3>{destination.name}</h3>
-
-          <button
-            className="wishlist-btn"
-            onClick={(e) => {
-  e.stopPropagation();
-  toggleWishlist(destination);
-}}
-          >
-            <Heart
-  size={18}
-  fill={isWishlisted ? "red" : "none"}
-  color={isWishlisted ? "red" : "currentColor"}
-/>
-          </button>
-        </div>
-
+        <h3>{destination.name}</h3>
         <p>{destination.description}</p>
 
-        <button
+        <Link
+          to={`/destination/${destination.id}`}
           className="btn btn-primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            openDestination();
-          }}
         >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );

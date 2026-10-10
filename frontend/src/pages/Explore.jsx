@@ -1,100 +1,55 @@
-import { useState } from "react";
-import DestinationFilters from "../components/destinations/DestinationFilters";
-import DestinationCard from "../components/destinations/DestinationCard";
-import images from "../assets/images";
-
-const { goa, manali, jaipur, rishikesh, kerala, coorg } = images;
+﻿const places = [
+  ["goa", "Goa", "🏝️", "Beaches & nightlife", "4.8"],
+  ["manali", "Manali", "🏔️", "Mountains & snow", "4.7"],
+  ["jaipur", "Jaipur", "🏰", "Culture & heritage", "4.6"],
+  ["kerala", "Kerala", "🌴", "Backwaters & nature", "4.8"],
+  ["ladakh", "Ladakh", "⛰️", "Adventure & mountains", "4.9"],
+  ["udaipur", "Udaipur", "🏛️", "Lakes & royal heritage", "4.7"],
+];
 
 function Explore() {
-  const destinations = [
-    {
-      id: 1,
-      name: "Goa",
-      category: "Beach",
-      description: "Sunny beaches and nightlife",
-      image: goa,
-    },
-    {
-      id: 2,
-      name: "Manali",
-      category: "Mountain",
-      description: "Snowy mountains and adventure",
-      image: manali,
-    },
-    {
-      id: 3,
-      name: "Jaipur",
-      category: "Heritage",
-      description: "Historic forts and palaces",
-      image: jaipur,
-    },
-    {
-      id: 4,
-      name: "Rishikesh",
-      category: "Adventure",
-      description: "River rafting and spirituality",
-      image: rishikesh,
-    },
-    {
-      id: 5,
-      name: "Kerala",
-      category: "Beach",
-      description: "Tropical beaches and backwaters",
-      image: kerala,
-    },
-    {
-      id: 6,
-      name: "Coorg",
-      category: "Mountain",
-      description: "Hilly terrain and coffee plantations",
-      image: coorg,
-    },
-  ];
-
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-
-  const filteredDestinations = destinations.filter((destination) => {
-    const searchTerm = search.toLowerCase();
-
-    const matchesSearch =
-      destination.name.toLowerCase().includes(searchTerm) ||
-      destination.description.toLowerCase().includes(searchTerm) ||
-      destination.category.toLowerCase().includes(searchTerm);
-
-    const matchesCategory =
-      category === "All" ||
-      destination.category.toLowerCase() === category.toLowerCase();
-
-    return matchesSearch && matchesCategory;
-  });
-
   return (
-    <div className="container">
-      <div className="explore-header">
-        <h1>Explore Destinations</h1>
+    <section className="page-section">
+      <div className="container">
+        <div className="page-header">
+          <span>DISCOVER</span>
+          <h1>Explore destinations</h1>
+          <p>Find your next place to visit.</p>
+        </div>
 
-        <DestinationFilters
-          search={search}
-          setSearch={setSearch}
-          category={category}
-          setCategory={setCategory}
-        />
-      </div>
+        <div className="search-box">
+          <input placeholder="🔎 Search destinations..." />
+          <select>
+            <option>All categories</option>
+            <option>Beach</option>
+            <option>Mountains</option>
+            <option>Culture</option>
+            <option>Adventure</option>
+          </select>
+          <button className="btn btn-primary">Search</button>
+        </div>
 
-      <div className="destination-grid">
-        {filteredDestinations.length > 0 ? (
-          filteredDestinations.map((destination) => (
-            <DestinationCard
-              key={destination.id}
-              destination={destination}
-            />
-          ))
-        ) : (
-          <p className="no-results">
-            No destinations found.
-          </p>
-        )}
+        <div className="destination-grid">
+          {places.map(([id, name, emoji, description, rating]) => (
+            <article className="destination-card" key={id}>
+              <div className="destination-image large">
+                <span>{emoji}</span>
+                <button className="heart">♡</button>
+              </div>
+
+              <div className="destination-info">
+                <h3>{name}</h3>
+                <div className="location">📍 India</div>
+                <p>{description}</p>
+
+                <div className="destination-footer">
+                  <span>★ {rating}</span>
+                  <a href={`#destination/${id}`}>View Details →</a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,113 +1,44 @@
-import "../Footer.css";
-import { getFeaturedDestination } from "../../utils/journeyPhoto";
+import { Globe, MapPin } from "lucide-react";
 
 function Footer() {
-  const featured = getFeaturedDestination();
-
   return (
-    <footer className="home-footer">
-      <div className="home-footer__stage">
-        <img
-          className="home-footer__photo"
-          src={featured.image}
-          alt=""
-        />
-
-        <div className="home-footer__scrim" />
-
-        <div className="container home-footer__stage-inner">
-          <div className="home-footer__intro">
-            <div>
-              <p className="home-footer__eyebrow">
-                YOUR NEXT CHAPTER
-              </p>
-
-              <h2>Somewhere beautiful awaits.</h2>
-
-              <p className="home-footer__lead">
-                From quiet mountain mornings to ocean sunsets,
-                find a place that feels like you.
-              </p>
-            </div>
-
-            <a
-              href="#explore"
-              className="home-footer__cta"
-            >
-              Explore destinations
-            </a>
+    <footer className="footer">
+      <div className="container footer-grid">
+        <div>
+          <div className="footer-logo">
+            <MapPin size={22} />
+            TripEase
           </div>
 
-          <a
-            href={`#destination/${featured.id}`}
-            className="home-footer__now"
-          >
-            <span className="home-footer__now-thumb">
-              <img
-                src={featured.image}
-                alt={featured.name}
-              />
-            </span>
+          <p className="footer-description">
+            Your smarter way to discover destinations, plan trips and travel
+            better.
+          </p>
+        </div>
 
-            <span className="home-footer__now-text">
-              <small>Featured this visit</small>
+        <div>
+          <h4>Explore</h4>
+          <a href="#explore">Destinations</a>
+          <a href="#recommendations">Recommendations</a>
+          <a href="#my-trips">My Trips</a>
+        </div>
 
-              <strong>
-                {featured.name}
-              </strong>
-            </span>
+        <div>
+          <h4>Account</h4>
+          <a href="#login">Login</a>
+          <a href="#signup">Create Account</a>
+          <a href="#profile">Profile</a>
+        </div>
 
-            <span className="home-footer__now-arrow">
-              →
-            </span>
-          </a>
+        <div>
+          <h4>TripEase</h4>
+          <a href="#wishlist">Wishlist</a>
+          <a href="#recommendations">Smart Recommendations</a>
         </div>
       </div>
 
-      <div className="home-footer__links">
-        <div className="container home-footer__grid">
-          <div className="home-footer__brand">
-            <a
-              href="#home"
-              className="home-footer__logo"
-            >
-              ✈ TripEase
-            </a>
-
-            <p>Plan less. Travel more.</p>
-          </div>
-
-          <nav>
-            <h3>Discover</h3>
-            <a href="#explore">All destinations</a>
-            <a href="#recommendations">For you</a>
-            <a href="#wishlist">Saved places</a>
-          </nav>
-
-          <nav>
-            <h3>Your Journey</h3>
-            <a href="#my-trips">My Trips</a>
-            <a href="#profile">My Profile</a>
-          </nav>
-
-          <nav>
-            <h3>Account</h3>
-            <a href="#login">Login</a>
-            <a href="#signup">Sign Up</a>
-          </nav>
-        </div>
-
-        <div className="container home-footer__bottom">
-          <p>
-            © {new Date().getFullYear()} TripEase
-          </p>
-
-          <span>Take the scenic route.</span>
-
-          <a href="#home">
-            Back to Home ↑
-          </a>
-        </div>
+      <div className="container footer-bottom">
+        <p>© 2026 TripEase. Built for smarter travel.</p>
       </div>
     </footer>
   );

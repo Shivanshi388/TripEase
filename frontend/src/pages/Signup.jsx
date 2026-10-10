@@ -1,107 +1,103 @@
 ﻿import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import authService from "../services/authService";
 
 function Signup() {
-  const { signup } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+    setMessage("");
 
     if (password.length < 8) {
-      setError("Choose a password with at least 8 characters.");
+      setError("Password must be at least 8 characters long.");
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError("Your passwords do not match.");
-      return;
+    setLoading(true);
+
+    try {
+      const result = await authService.register(name, email, password);
+      setMessage(result.message || "Account created successfully!");
+      setName("");
+      setEmail("");
+      setPassword("");
+    } catch (err) {
+      setError(err.message || "Unable to create your account.");
+    } finally {
+      setLoading(false);
     }
-
-    const result = signup(name, email, password);
-
-    if (!result.success) {
-      setError(result.message);
-      return;
-    }
-
-    window.location.hash = "#home";
-  };
+  }
 
   return (
-    <section className="auth-page">
-      <div className="auth-card">
-        <div className="auth-eyebrow">MAKE EVERY JOURNEY COUNT</div>
-        <h1>Join TripEase</h1>
-        <p className="auth-description">
-          Create your account and start planning memorable escapes.
-        </p>
+    <section className="page-section">
+      <div className="container auth-page">
+        <div className="auth-card">
+          <div className="auth-header">
+            <span className="auth-icon">✈️</span>
+            <h1>Create your TripEase account</h1>
+            <p>Start planning smarter trips today.</p>
+          </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label htmlFor="signup-name">Full name</label>
-          <input
-            id="signup-name"
-            type="text"
-            autoComplete="name"
-            placeholder="Your name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            required
-          />
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <label>
+              Full Name
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                minLength={2}
+                maxLength={60}
+                required
+              />
+            </label>
 
-          <label htmlFor="signup-email">Email address</label>
-          <input
-            id="signup-email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
+            <label>
+              Email
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+            </label>
 
-          <label htmlFor="signup-password">Password</label>
-          <input
-            id="signup-password"
-            type="password"
-            autoComplete="new-password"
-            minLength={8}
-            placeholder="At least 8 characters"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
+            <label>
+              Password
+              <input
+                type="password"
+                placeholder="At least 8 characters"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                minLength={8}
+                required
+              />
+            </label>
 
-          <label htmlFor="signup-confirm-password">Confirm password</label>
-          <input
-            id="signup-confirm-password"
-            type="password"
-            autoComplete="new-password"
-            placeholder="Enter your password again"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            required
-          />
+            {error && <p role="alert">{error}</p>}
+            {message && <p role="status">{message}</p>}
 
-          {error && (
-            <p className="auth-error" role="alert">
-              {error}
-            </p>
-          )}
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Create Account"}
+            </button>
+          </form>
 
-          <button className="auth-submit" type="submit">
-            Create account
-          </button>
-        </form>
-
-        <p className="auth-switch">
-          Already have an account? <a href="#login">Log in</a>
-        </p>
+          <p className="auth-switch">
+            Already have an account?{" "}
+            <a href="#login">Log in</a>
+          </p>
+        </div>
       </div>
     </section>
   );

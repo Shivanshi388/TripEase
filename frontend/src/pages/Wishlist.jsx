@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/common/Footer";
 import { useWishlist } from "../context/WishlistContext";
 
 function Wishlist() {
