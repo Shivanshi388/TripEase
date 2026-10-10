@@ -1,41 +1,4 @@
-const data = {
-  goa: {
-    name: "Goa",
-    emoji: "🏝️",
-    description:
-      "A beautiful destination famous for beaches, sunsets, food and unforgettable experiences.",
-  },
-  manali: {
-    name: "Manali",
-    emoji: "🏔️",
-    description:
-      "A peaceful mountain destination perfect for nature, adventure and relaxing getaways.",
-  },
-  jaipur: {
-    name: "Jaipur",
-    emoji: "🏰",
-    description:
-      "Explore royal palaces, historic forts, colorful markets and amazing Rajasthani cuisine.",
-  },
-  kerala: {
-    name: "Kerala",
-    emoji: "🌴",
-    description:
-      "Discover peaceful backwaters, beautiful landscapes and rich local culture.",
-  },
-  ladakh: {
-    name: "Ladakh",
-    emoji: "⛰️",
-    description:
-      "An adventurous mountain destination with breathtaking landscapes and unique experiences.",
-  },
-  udaipur: {
-    name: "Udaipur",
-    emoji: "🏛️",
-    description:
-      "Known for beautiful lakes, palaces and unforgettable royal architecture.",
-  },
-};
+﻿import destinations from "../data/destinations";
 
 function DestinationPage({ destination }) {
   const place = data[destination] || data.goa;
@@ -44,7 +7,11 @@ function DestinationPage({ destination }) {
     <section className="page-section">
       <div className="container">
         <div className="destination-detail-hero">
-          <div className="big-emoji">{place.emoji}</div>
+          <img
+            src={place.image}
+            alt={place.name}
+            className="destination-detail-image"
+          />
 
           <div>
             <span>DESTINATION GUIDE</span>
@@ -55,9 +22,8 @@ function DestinationPage({ destination }) {
               <a href="#my-trips" className="btn btn-primary">
                 Plan a Trip
               </a>
-
               <a href="#wishlist" className="btn btn-secondary">
-                ♡ Add to Wishlist
+                Add to Wishlist
               </a>
             </div>
           </div>
@@ -65,25 +31,19 @@ function DestinationPage({ destination }) {
 
         <div className="detail-grid">
           <div className="detail-box">
-            <span>📍</span>
+            <span>Location</span>
             <h3>Location</h3>
             <p>India</p>
           </div>
 
           <div className="detail-box">
-            <span>⭐</span>
-            <h3>Rating</h3>
-            <p>4.8 / 5</p>
-          </div>
-
-          <div className="detail-box">
-            <span>🌤️</span>
+            <span>Category</span>
             <h3>Best for</h3>
             <p>Leisure & Adventure</p>
           </div>
 
           <div className="detail-box">
-            <span>💰</span>
+            <span>Budget</span>
             <h3>Budget</h3>
             <p>Moderate</p>
           </div>
@@ -98,7 +58,7 @@ function DestinationPage({ destination }) {
           </p>
 
           <a href="#recommendations" className="btn btn-primary">
-            Get Recommendations →
+            Get Recommendations
           </a>
         </div>
       </div>

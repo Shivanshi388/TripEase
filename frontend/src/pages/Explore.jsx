@@ -51,7 +51,7 @@ function Explore() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
