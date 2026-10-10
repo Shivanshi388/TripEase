@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { useWishlist } from "../../context/WishlistContext";
 
@@ -23,12 +22,12 @@ function DestinationCard({ destination }) {
         <h3>{destination.name}</h3>
         <p>{destination.description}</p>
 
-        <Link
-          to={`/destination/${destination.id}`}
+        <a
+          href={`#destination/${destination.id}`}
           className="btn btn-primary"
         >
           View Details
-        </Link>
+        </a>
       </div>
     </div>
   );
