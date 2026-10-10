@@ -1,4 +1,4 @@
-﻿const places = [
+const places = [
   ["goa", "Goa", "🏝️", "Beaches & nightlife", "4.8"],
   ["manali", "Manali", "🏔️", "Mountains & snow", "4.7"],
   ["jaipur", "Jaipur", "🏰", "Culture & heritage", "4.6"],
@@ -51,7 +51,7 @@ function Explore() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
