@@ -1,240 +1,197 @@
-const destinations = [
-  {
-    id: "goa",
-    name: "Goa",
-    country: "India",
-    emoji: "🏝️",
-    description: "Beaches, sunsets and unforgettable adventures.",
-    rating: "4.8",
-  },
-  {
-    id: "manali",
-    name: "Manali",
-    country: "India",
-    emoji: "🏔️",
-    description: "Mountains, snow and peaceful escapes.",
-    rating: "4.7",
-  },
-  {
-    id: "jaipur",
-    name: "Jaipur",
-    country: "India",
-    emoji: "🏰",
-    description: "Royal architecture, culture and delicious food.",
-    rating: "4.6",
-  },
-];
+import destinations from "../data/destinations";
+import { getFeaturedDestination } from "../utils/journeyPhoto";
 
-const features = [
-  {
-    icon: "🗺️",
-    title: "Smart Planning",
-    text: "Build a personalized trip plan based on your destination and preferences.",
-  },
-  {
-    icon: "💡",
-    title: "Personalized Recommendations",
-    text: "Discover places and experiences that match your travel style.",
-  },
-  {
-    icon: "💰",
-    title: "Budget Friendly",
-    text: "Keep track of your travel budget and plan smarter.",
-  },
-  {
-    icon: "❤️",
-    title: "Save Your Favorites",
-    text: "Create a wishlist of destinations you want to visit.",
-  },
-];
+import {
+  useRef,
+} from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+
+import "./Home.css";
 
 function Home() {
+  const featured = getFeaturedDestination();
+
+const others = destinations.filter(
+  (d) => d.id !== featured.id
+);
+
+  const morphRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: morphRef,
+    offset: ["start start", "end end"],
+  });
+
+  const width = useTransform(
+    scrollYProgress,
+    [0, 0.6],
+    ["100vw", "42vw"]
+  );
+
+  const height = useTransform(
+    scrollYProgress,
+    [0, 0.6],
+    ["100vh", "62vh"]
+  );
+
+  const radius = useTransform(
+    scrollYProgress,
+    [0, 0.6],
+    ["0px", "28px"]
+  );
+
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.6],
+    ["0vw", "-24vw"]
+  );
+
+  const overlay = useTransform(
+    scrollYProgress,
+    [0, 0.4],
+    [0.45, 0]
+  );
+
+  const heroTextOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.25],
+    [1, 0]
+  );
+
+  const heroTextY = useTransform(
+    scrollYProgress,
+    [0, 0.25],
+    [0, -60]
+  );
+
+  const detailsOpacity = useTransform(
+    scrollYProgress,
+    [0.5, 0.75],
+    [0, 1]
+  );
+
+  const detailsX = useTransform(
+    scrollYProgress,
+    [0.5, 0.75],
+    [60, 0]
+  );
+
   return (
     <>
-      <section className="hero">
-        <div className="container hero-grid">
-          <div className="hero-content">
-            <div className="eyebrow">✨ Your smarter way to travel</div>
+      <section ref={morphRef} className="morph">
+        <div className="morph__sticky">
+          <motion.div
+            className="morph__photo"
+            style={{
+              width,
+              height,
+              borderRadius: radius,
+              x,
+            }}
+          >
+            <img
+              src={featured.image}
+              alt={featured.name}
+            />
+
+            <motion.div
+              className="morph__overlay"
+              style={{ opacity: overlay }}
+            />
+          </motion.div>
+
+          <motion.div
+            className="morph__hero-text"
+            style={{
+              opacity: heroTextOpacity,
+              y: heroTextY,
+            }}
+          >
+            <p className="eyebrow">
+              Discover the world with TripEase
+            </p>
 
             <h1>
-              Plan less.
+              Where nature
               <br />
-              <span>Travel more.</span>
+              meets wanderlust
             </h1>
 
-            <p>
-              TripEase helps you discover destinations, build personalized
-              itineraries and manage your entire journey in one simple place.
+            <p className="sub">
+              Plan unforgettable journeys to beautiful destinations.
             </p>
 
-            <div className="hero-buttons">
-              <a href="#explore" className="btn btn-primary">
-                Explore Destinations →
-              </a>
+            <span className="scroll-hint">
+              Scroll ↓
+            </span>
+          </motion.div>
 
-              <a href="#my-trips" className="btn btn-secondary">
-                Plan My Trip
-              </a>
-            </div>
-
-            <div className="hero-stats">
-              <div>
-                <strong>100+</strong>
-                <span>Destinations</span>
-              </div>
-              <div>
-                <strong>500+</strong>
-                <span>Trip Ideas</span>
-              </div>
-              <div>
-                <strong>4.8/5</strong>
-                <span>User Rating</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="hero-card">
-            <div className="floating-card top-card">
-              ✨ Personalized for you
-            </div>
-
-            <div className="travel-illustration">
-              <div className="sun">☀️</div>
-              <div className="mountain">🏔️</div>
-              <div className="plane">✈️</div>
-            </div>
-
-            <div className="floating-card bottom-card">
-              📍 Discover your next adventure
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="planner-section">
-        <div className="container">
-          <div className="planner-card">
-            <div className="section-heading left">
-              <span>TRIP PLANNER</span>
-              <h2>Where are you going?</h2>
-              <p>Tell us a little about your trip and get started.</p>
-            </div>
-
-            <div className="planner-form">
-              <label>
-                Destination
-                <input placeholder="e.g. Goa" />
-              </label>
-
-              <label>
-                Start Date
-                <input type="date" />
-              </label>
-
-              <label>
-                End Date
-                <input type="date" />
-              </label>
-
-              <label>
-                Travellers
-                <select>
-                  <option>1 Traveller</option>
-                  <option>2 Travellers</option>
-                  <option>3 Travellers</option>
-                  <option>4 Travellers</option>
-                  <option>5+ Travellers</option>
-                </select>
-              </label>
-
-              <button className="btn btn-primary">Search</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-heading">
-            <span>EXPLORE</span>
-            <h2>Popular destinations</h2>
-            <p>Places travellers are loving right now.</p>
-          </div>
-
-          <div className="destination-grid">
-            {destinations.map((destination) => (
-              <article className="destination-card" key={destination.id}>
-                <div className="destination-image">
-                  <span>{destination.emoji}</span>
-                  <button className="heart">♡</button>
-                </div>
-
-                <div className="destination-info">
-                  <h3>{destination.name}</h3>
-
-                  <div className="location">
-                    📍 {destination.country}
-                  </div>
-
-                  <p>{destination.description}</p>
-
-                  <div className="destination-footer">
-                    <span>★ {destination.rating}</span>
-
-                    <a href={`#destination/${destination.id}`}>
-                      Explore →
-                    </a>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="center-button">
-            <a href="#explore" className="btn btn-secondary">
-              View All Destinations →
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="section features-section">
-        <div className="container">
-          <div className="section-heading">
-            <span>WHY TRIPEASE?</span>
-            <h2>Everything you need for your trip</h2>
-            <p>
-              From planning to packing, TripEase keeps everything organized.
+          <motion.div
+            className="morph__details"
+            style={{
+              opacity: detailsOpacity,
+              x: detailsX,
+            }}
+          >
+            <p className="eyebrow eyebrow--green">
+              Featured Destination
             </p>
-          </div>
 
-          <div className="features-grid">
-            {features.map((feature) => (
-              <div className="feature-card" key={feature.title}>
-                <div className="feature-icon">{feature.icon}</div>
-                <h3>{feature.title}</h3>
-                <p>{feature.text}</p>
-              </div>
-            ))}
-          </div>
+            <h2>{featured.name}</h2>
+
+            <p className="country">
+  {featured.location}
+</p>
+
+<p className="tagline">
+  {featured.tagline}
+</p>
+
+<p className="desc">
+  {featured.description}
+</p>
+
+<div className="meta">
+  <div>
+    <span>Best Time</span>
+    <strong>{featured.bestTime}</strong>
+  </div>
+
+  <div>
+    <span>Budget</span>
+    <strong>{featured.budget}</strong>
+  </div>
+</div>
+          </motion.div>
         </div>
       </section>
 
-      <section className="cta-section">
-        <div className="container">
-          <div className="cta-card">
-            <div>
-              <span>READY TO TRAVEL?</span>
-              <h2>Your next adventure starts here.</h2>
-              <p>
-                Explore destinations and start building your perfect trip.
-              </p>
-            </div>
+      <section id="explore" className="others">
+        <h2>Explore More Destinations</h2>
 
-            <a href="#explore" className="btn btn-white">
-              Start Exploring →
-            </a>
-          </div>
+        <div className="others__grid">
+          {others.map((destination) => (
+            <div
+  key={destination.id}
+  className="card"
+  onClick={() => {
+    window.location.hash = `destination/${destination.id}`;
+  }}
+>
+              <img
+                src={destination.image}
+                alt={destination.name}
+              />
+
+              <div className="card__body">
+                <h3>{destination.name}</h3>
+
+                <p className="country">
+                  {destination.location}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </>
