@@ -1,0 +1,21 @@
+destination_id,name,category,best_season,avg_daily_cost,rating,popularity,latitude,longitude
+D001,Goa,Beach,Nov-Feb,2500,4.6,95,15.4909,73.8278
+D002,Manali,Mountains,Oct-Jun,2200,4.5,92,32.2396,77.1887
+D003,Jaipur,Heritage,Oct-Mar,2000,4.5,90,26.9124,75.7873
+D004,Rishikesh,Adventure,Sep-Jun,1800,4.4,88,30.0869,78.2676
+D005,Munnar,Nature,Oct-May,2300,4.6,87,10.0889,77.0595
+D006,Udaipur,Heritage,Oct-Mar,2100,4.6,85,24.5854,73.7125
+D007,Varanasi,Spiritual,Oct-Mar,1600,4.4,86,25.3176,82.9739
+D008,Shimla,Mountains,Mar-Jun,2100,4.4,84,31.1048,77.1734
+D009,Andaman Islands,Beach,Nov-May,3500,4.7,82,11.6234,92.7265
+D010,Ladakh,Adventure,May-Sep,3000,4.7,80,34.1526,77.5771
+D011,Delhi,City,Oct-Mar,2000,4.3,94,28.6139,77.2090
+D012,Mumbai,City,Oct-Feb,3000,4.4,93,19.0760,72.8777
+D013,Kolkata,Culture,Oct-Mar,1800,4.3,82,22.5726,88.3639
+D014,Agra,Heritage,Oct-Mar,1700,4.4,91,27.1767,78.0081
+D015,Amritsar,Heritage,Oct-Mar,1700,4.5,83,31.6340,74.8723
+D016,Coorg,Nature,Oct-May,2200,4.5,79,12.4244,75.7382
+D017,Ooty,Nature,Oct-Jun,2000,4.4,81,11.4102,76.6950
+D018,Alappuzha,Backwaters,Nov-Feb,2400,4.5,77,9.4981,76.3388
+D019,Pushkar,Spiritual,Oct-Mar,1600,4.4,76,26.4897,74.5511
+D020,Darjeeling,Mountains,Mar-May,2100,4.5,80,27.0410,88.2663

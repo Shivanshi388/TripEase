@@ -96,7 +96,7 @@ function Explore() {
           </p>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

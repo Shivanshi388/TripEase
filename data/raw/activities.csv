@@ -1,0 +1,21 @@
+activity_id,destination_id,activity_name,activity_type,avg_cost,duration_hours,rating,best_for
+A001,D001,Beach Visit,Leisure,500,4,4.6,Couples
+A002,D001,Water Sports,Adventure,1200,3,4.5,Adventure
+A003,D002,Solang Valley Adventure,Adventure,1000,5,4.7,Adventure
+A004,D002,Rohtang Pass Tour,Sightseeing,1500,6,4.6,Families
+A005,D003,Amber Fort Visit,Heritage,500,3,4.8,History
+A006,D003,City Palace Tour,Heritage,400,2,4.7,History
+A007,D004,River Rafting,Adventure,1200,4,4.8,Adventure
+A008,D004,Ganga Aarti,Spiritual,200,2,4.9,Spiritual
+A009,D005,Tea Garden Tour,Nature,400,3,4.7,Nature
+A010,D005,Eravikulam National Park,Nature,500,4,4.6,Families
+A011,D006,City Palace Visit,Heritage,500,3,4.8,History
+A012,D006,Lake Pichola Boat Ride,Leisure,700,2,4.7,Couples
+A013,D007,Ganga Boat Ride,Spiritual,500,2,4.8,Spiritual
+A014,D007,Temple Tour,Spiritual,300,3,4.7,Spiritual
+A015,D008,Mall Road Walk,Leisure,200,2,4.5,Families
+A016,D008,Kufri Excursion,Nature,800,5,4.6,Nature
+A017,D009,Scuba Diving,Adventure,2500,4,4.9,Adventure
+A018,D009,Island Beach Tour,Leisure,1500,5,4.8,Couples
+A019,D010,Pangong Lake Tour,Nature,1800,8,4.9,Nature
+A020,D010,Mountain Trek,Adventure,2000,7,4.8,Adventure
