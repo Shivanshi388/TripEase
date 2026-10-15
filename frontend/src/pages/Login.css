@@ -1,0 +1,161 @@
+﻿.trip-login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 55% 45%;
+  background: #f4f8ff;
+  color: #14284b;
+}
+
+.trip-login-visual {
+  min-height: 100vh;
+  padding: 42px 7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  background:
+    linear-gradient(180deg, rgba(7,26,57,.15), rgba(7,26,57,.25)),
+    url("/tripease-login.png") center / cover no-repeat,
+    linear-gradient(135deg, #2d72d9, #102b53);
+}
+
+.trip-login-brand {
+  color: white;
+  text-decoration: none;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.trip-login-plane { font-size: 36px; margin-right: 12px; }
+
+.trip-login-copy { max-width: 580px; margin: 50px 0; }
+.trip-login-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 2px; }
+
+.trip-login-copy h1 {
+  margin: 18px 0;
+  color: white;
+  font-size: clamp(38px, 4.2vw, 66px);
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+}
+
+.trip-login-copy p { color: white; font-size: 21px; }
+.trip-login-caption { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+
+.trip-login-panel {
+  min-height: 100vh;
+  padding: 90px clamp(22px, 5vw, 76px) 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.trip-login-top {
+  position: absolute;
+  top: 34px;
+  right: clamp(22px, 5vw, 76px);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #60718f;
+  font-size: 13px;
+}
+
+.trip-login-top a {
+  padding: 11px 17px;
+  border: 1px solid #2867f0;
+  border-radius: 10px;
+  color: #2867f0;
+  text-decoration: none;
+  font-weight: 750;
+}
+
+.trip-login-card {
+  width: 100%;
+  max-width: 470px;
+  margin: 20px auto 0;
+  padding: clamp(25px, 3.2vw, 44px);
+  border: 1px solid #e6edf8;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 20px 55px rgba(37,71,125,.09);
+}
+
+.trip-login-icon { margin-bottom: 12px; color: #2867f0; font-size: 28px; }
+.trip-login-card h2 { margin: 0; color: #14284b; font-size: clamp(30px,3vw,40px); letter-spacing: -1px; }
+.trip-login-subtitle { margin: 12px 0 28px; color: #667895; font-size: 15px; }
+
+.trip-login-card form label {
+  display: block;
+  margin: 18px 0 9px;
+  color: #233957;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.trip-login-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 15px;
+  border: 1px solid #dce5f3;
+  border-radius: 11px;
+  background: white;
+}
+
+.trip-login-input:focus-within {
+  border-color: #3978f6;
+  box-shadow: 0 0 0 3px rgba(57,120,246,.12);
+}
+
+.trip-login-input > span { color: #7388a8; font-size: 18px; }
+
+.trip-login-input input {
+  width: 100%;
+  min-width: 0;
+  padding: 15px 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #14284b;
+  font: inherit;
+  font-size: 14px;
+}
+
+.trip-login-submit {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 28px;
+  border: 0;
+  border-radius: 11px;
+  background: #2867f0;
+  color: white;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.trip-login-submit:hover { background: #1954d5; }
+.trip-login-submit:disabled { opacity: .7; cursor: wait; }
+.trip-login-error { color: #bd3030; font-size: 13px; }
+
+.trip-login-signup { margin-top: 24px; color: #71809b; text-align: center; font-size: 13px; }
+.trip-login-signup a { color: #2867f0; font-weight: 750; text-decoration: none; }
+.trip-login-footer { margin: 28px auto 0; color: #8291a9; text-align: center; font-size: 11px; }
+
+@media (max-width: 850px) {
+  .trip-login { grid-template-columns: 1fr; }
+  .trip-login-visual { min-height: 360px; padding: 28px 7%; }
+  .trip-login-copy { margin: 35px 0; }
+  .trip-login-copy h1 { font-size: 42px; }
+  .trip-login-panel { min-height: 620px; }
+}
+
+@media (max-width: 480px) {
+  .trip-login-visual { min-height: 320px; }
+  .trip-login-copy h1 { font-size: 36px; }
+  .trip-login-panel { padding-inline: 16px; }
+  .trip-login-card { padding: 25px 20px; }
+}

@@ -1,0 +1,671 @@
+﻿.trip-signup {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 48% 52%;
+  background: #f5f8ff;
+  color: #172b4d;
+}
+
+.trip-signup-art {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 40px clamp(25px, 4vw, 60px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  background:
+    linear-gradient(180deg, rgba(7, 31, 48, .18), rgba(7, 31, 48, .40)),
+    url("/signup-travel.png") center / cover no-repeat;
+}
+
+.trip-signup-brand {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.trip-signup-brand span {
+  font-size: 34px;
+}
+
+.trip-signup-message {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+  margin: 40px 0;
+}
+
+.trip-signup-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.trip-signup-message h1 {
+  max-width: 470px;
+  margin: 18px 0;
+  color: white;
+  font-size: clamp(36px, 4vw, 56px);
+  line-height: 1.12;
+  letter-spacing: -1.5px;
+  text-shadow: 0 2px 14px rgba(0,0,0,.12);
+}
+
+.trip-signup-message p {
+  max-width: 360px;
+  color: white;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+/* Keep the two small floating travel cards. */
+.trip-signup-destination {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 48px);
+  box-sizing: border-box;
+  padding: 13px 15px;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 15px;
+  background: rgba(255,255,255,.19);
+  box-shadow: 0 10px 30px rgba(8,30,55,.13);
+  backdrop-filter: blur(12px);
+  color: white;
+}
+
+.destination-one {
+  right: 5%;
+  bottom: 19%;
+  transform: rotate(1deg);
+}
+
+.destination-two {
+  left: 6%;
+  bottom: 6%;
+  transform: rotate(-1deg);
+}
+
+.destination-icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255,255,255,.24);
+  font-size: 22px;
+}
+
+.trip-signup-destination strong,
+.trip-signup-destination small {
+  display: block;
+}
+
+.trip-signup-destination strong {
+  font-size: 12px;
+}
+
+.trip-signup-destination small {
+  margin-top: 4px;
+  color: rgba(255,255,255,.9);
+  font-size: 10px;
+}
+
+.destination-arrow {
+  margin-left: 3px;
+  font-size: 17px;
+}
+
+.trip-signup-orbit,
+.trip-signup-spark {
+  display: none;
+}
+
+.trip-signup-panel {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 100px clamp(22px, 5vw, 75px) 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background: #f5f8ff;
+}
+
+.trip-signup-top {
+  position: absolute;
+  top: 32px;
+  right: clamp(22px, 5vw, 75px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #65758f;
+  font-size: 13px;
+}
+
+.trip-signup-top a {
+  padding: 10px 17px;
+  border: 1px solid #2867f0;
+  border-radius: 10px;
+  color: #2867f0;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.trip-signup-top a:hover {
+  background: #2867f0;
+  color: white;
+}
+
+.trip-signup-card {
+  width: 100%;
+  max-width: 470px;
+  box-sizing: border-box;
+  margin: 20px auto 0;
+  padding: clamp(25px, 3vw, 40px);
+  border: 1px solid #e5ebf5;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 18px 50px rgba(35,65,110,.08);
+}
+
+.trip-signup-icon {
+  margin-bottom: 12px;
+  color: #2867f0;
+  font-size: 27px;
+}
+
+.trip-signup-step {
+  color: #2867f0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.trip-signup-card h2 {
+  margin: 10px 0;
+  color: #172b4d;
+  font-size: clamp(30px, 3vw, 38px);
+  letter-spacing: -1px;
+}
+
+.trip-signup-subtitle {
+  margin: 0 0 22px;
+  color: #6b7b95;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.trip-signup-card form label {
+  display: block;
+  margin: 15px 0 7px;
+  color: #273957;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.trip-signup-card form input {
+  display: block;
+  width: 100%;
+  min-height: 47px;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #dce5f3;
+  border-radius: 10px;
+  outline: none;
+  background: white;
+  color: #172b4d;
+  font: inherit;
+  font-size: 13px;
+}
+
+.trip-signup-card form input:focus {
+  border-color: #2867f0;
+  box-shadow: 0 0 0 3px rgba(40,103,240,.12);
+}
+
+.trip-signup-card form input::placeholder {
+  color: #9aa8bd;
+}
+
+.trip-signup-hint {
+  margin: 8px 0 0;
+  color: #8290a6;
+  font-size: 11px;
+}
+
+.trip-signup-error {
+  color: #bd3030;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.trip-signup-card form button {
+  width: 100%;
+  min-height: 51px;
+  margin-top: 22px;
+  border: none;
+  border-radius: 10px;
+  background: #2867f0;
+  color: white;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.trip-signup-card form button:hover:not(:disabled) {
+  background: #1b54d1;
+}
+
+.trip-signup-card form button:disabled {
+  opacity: .7;
+  cursor: wait;
+}
+
+.trip-signup-terms {
+  margin: 19px 0 0;
+  color: #8290a6;
+  text-align: center;
+  font-size: 11px;
+}
+
+@media (max-width: 850px) {
+  .trip-signup {
+    grid-template-columns: 1fr;
+  }
+
+  .trip-signup-art {
+    min-height: 440px;
+    padding: 28px 7%;
+  }
+
+  .trip-signup-message {
+    margin: 35px 0 100px;
+  }
+
+  .trip-signup-message h1 {
+    max-width: 500px;
+    font-size: 42px;
+  }
+
+  .destination-one {
+    right: 4%;
+    bottom: 9%;
+  }
+
+  .destination-two {
+    left: 4%;
+    bottom: 2%;
+  }
+
+  .trip-signup-panel {
+    min-height: auto;
+    padding: 95px 22px 40px;
+  }
+
+  .trip-signup-card {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-signup-art {
+    min-height: 440px;
+  }
+
+  .trip-signup-message h1 {
+    font-size: 35px;
+  }
+
+  .trip-signup-message p {
+    font-size: 15px;
+  }
+
+  .trip-signup-panel {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .trip-signup-top {
+    right: 16px;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .trip-signup-card {
+    padding: 24px 20px;
+  }
+
+  .trip-signup-destination {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .trip-signup-destination strong {
+    font-size: 11px;
+  }
+
+  .trip-signup-destination small {
+    font-size: 9px;
+  }
+}
+
+/* Fix signup left-panel text and floating-card overlap */
+.trip-signup-art {
+  min-height: 100vh;
+  height: auto;
+  box-sizing: border-box;
+  padding: 38px clamp(25px, 4vw, 60px) 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.trip-signup-brand {
+  flex-shrink: 0;
+}
+
+.trip-signup-message {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 480px;
+  margin: auto 0;
+  padding: 70px 0 190px;
+  box-sizing: border-box;
+}
+
+.trip-signup-message h1 {
+  max-width: 460px;
+  font-size: clamp(36px, 3.8vw, 54px);
+  line-height: 1.12;
+  margin: 18px 0;
+}
+
+.trip-signup-message p {
+  max-width: 350px;
+  margin: 0;
+  line-height: 1.65;
+}
+
+.trip-signup-destination {
+  position: absolute;
+  z-index: 3;
+  max-width: calc(100% - 48px);
+  box-sizing: border-box;
+}
+
+.destination-one {
+  right: 5%;
+  bottom: 95px;
+  transform: rotate(1deg);
+}
+
+.destination-two {
+  left: 5%;
+  bottom: 25px;
+  transform: rotate(-1deg);
+}
+
+@media (max-width: 850px) {
+  .trip-signup-art {
+    min-height: 540px;
+    padding: 28px 7% 35px;
+  }
+
+  .trip-signup-message {
+    margin: 0;
+    padding: 45px 0 190px;
+  }
+
+  .trip-signup-message h1 {
+    max-width: 500px;
+    font-size: 42px;
+  }
+
+  .destination-one {
+    right: 4%;
+    bottom: 85px;
+  }
+
+  .destination-two {
+    left: 4%;
+    bottom: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-signup-art {
+    min-height: 540px;
+  }
+
+  .trip-signup-message {
+    padding-top: 35px;
+    padding-bottom: 205px;
+  }
+
+  .trip-signup-message h1 {
+    font-size: 35px;
+  }
+
+  .trip-signup-message p {
+    font-size: 15px;
+  }
+
+  .trip-signup-destination {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .destination-one {
+    bottom: 90px;
+  }
+
+  .destination-two {
+    bottom: 18px;
+  }
+}
+
+/* Refined, balanced left-side signup composition */
+.trip-signup-art {
+  min-height: 100vh;
+  height: auto;
+  box-sizing: border-box;
+  padding: 38px clamp(28px, 4vw, 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(7, 31, 48, .22), rgba(7, 31, 48, .42)),
+    url("/signup-travel.png") center / cover no-repeat;
+}
+
+.trip-signup-brand {
+  flex-shrink: 0;
+}
+
+.trip-signup-message {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 470px;
+  margin: auto 0;
+  padding: 0 0 35px;
+  box-sizing: border-box;
+}
+
+.trip-signup-kicker {
+  display: block;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.trip-signup-message h1 {
+  max-width: 450px;
+  margin: 0 0 20px;
+  font-size: clamp(38px, 3.8vw, 54px);
+  line-height: 1.12;
+  letter-spacing: -1.4px;
+}
+
+.trip-signup-message p {
+  max-width: 370px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Align both cards neatly along the bottom */
+.trip-signup-destination {
+  position: absolute;
+  z-index: 3;
+  bottom: 32px;
+  max-width: calc(50% - 25px);
+  min-height: 70px;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  gap: 10px;
+  transform: none;
+}
+
+.destination-one {
+  right: 28px;
+  left: auto;
+  bottom: 32px;
+}
+
+.destination-two {
+  left: 28px;
+  right: auto;
+  bottom: 32px;
+}
+
+.trip-signup-destination .destination-icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+}
+
+.trip-signup-destination strong {
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.trip-signup-destination small {
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.destination-arrow {
+  display: none;
+}
+
+@media (max-width: 1100px) and (min-width: 851px) {
+  .trip-signup-art {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  .trip-signup-message h1 {
+    font-size: 42px;
+  }
+
+  .trip-signup-destination {
+    max-width: calc(50% - 20px);
+    padding: 10px;
+  }
+
+  .destination-one {
+    right: 18px;
+  }
+
+  .destination-two {
+    left: 18px;
+  }
+}
+
+@media (max-width: 850px) {
+  .trip-signup-art {
+    min-height: 570px;
+    padding: 28px 7% 120px;
+  }
+
+  .trip-signup-message {
+    margin: auto 0;
+    padding: 35px 0;
+  }
+
+  .trip-signup-message h1 {
+    max-width: 500px;
+    font-size: 42px;
+  }
+
+  .trip-signup-destination {
+    bottom: 24px;
+    max-width: calc(50% - 18px);
+  }
+
+  .destination-one {
+    right: 7%;
+  }
+
+  .destination-two {
+    left: 7%;
+  }
+}
+
+@media (max-width: 520px) {
+  .trip-signup-art {
+    min-height: 620px;
+    padding: 25px 22px 170px;
+  }
+
+  .trip-signup-message {
+    padding: 25px 0;
+  }
+
+  .trip-signup-message h1 {
+    font-size: 36px;
+  }
+
+  .trip-signup-message p {
+    font-size: 15px;
+  }
+
+  .trip-signup-destination {
+    max-width: 235px;
+    min-height: 64px;
+    left: 22px;
+    right: auto;
+    bottom: auto;
+  }
+
+  .destination-two {
+    bottom: 20px;
+  }
+
+  .destination-one {
+    bottom: 94px;
+  }
+}

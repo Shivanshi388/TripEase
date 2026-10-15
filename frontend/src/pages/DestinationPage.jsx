@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 const data = {
   goa: {
     name: "Goa",
@@ -40,11 +41,51 @@ const data = {
 =======
 ﻿import destinations from "../data/destinations";
 >>>>>>> 8cc68a1 (Fix destination page JSX structure and button classes)
+=======
+﻿import { useState } from "react";
+import { Heart, X } from "lucide-react";
+import destinations from "../data/destinations";
+import { useAuth } from "../context/AuthContext";
+>>>>>>> 3daa256 (Add authentication and protect wishlist and trip planning)
 
 function DestinationPage({ destination }) {
+  const { user } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [authReturnTo, setAuthReturnTo] = useState("");
+
   const place = destinations.find(
     (d) => d.id === Number(destination)
   );
+
+  const handlePlanTrip = () => {
+    if (!user) {
+      setAuthReturnTo(`plan-trip/${place.id}`);
+      setShowAuthPrompt(true);
+      return;
+    }
+
+    window.location.hash = `plan-trip/${place.id}`;
+  };
+
+  const handleAddToWishlist = () => {
+    if (!user) {
+      setAuthReturnTo("wishlist");
+      setShowAuthPrompt(true);
+      return;
+    }
+
+    window.location.hash = "wishlist";
+  };
+
+  const goToAuth = (page) => {
+    sessionStorage.setItem(
+      "tripease_after_login",
+      authReturnTo || `plan-trip/${place.id}`
+    );
+
+    setShowAuthPrompt(false);
+    window.location.hash = page;
+  };
 
   if (!place) {
     return (
@@ -68,12 +109,21 @@ function DestinationPage({ destination }) {
             <p>{place.description}</p>
 
             <div className="detail-actions">
-              <a href="#my-trips" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handlePlanTrip}
+              >
                 Plan a Trip
-              </a>
-              <a href="#wishlist" className="btn btn-secondary">
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleAddToWishlist}
+              >
                 Add to Wishlist
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -111,6 +161,56 @@ function DestinationPage({ destination }) {
           </a>
         </div>
       </div>
+
+      {showAuthPrompt && (
+        <div
+          className="auth-prompt-overlay"
+          onClick={() => setShowAuthPrompt(false)}
+        >
+          <div
+            className="auth-prompt"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="destination-auth-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="auth-prompt-close"
+              aria-label="Close"
+              onClick={() => setShowAuthPrompt(false)}
+            >
+              <X size={20} />
+            </button>
+
+            <Heart size={32} />
+
+            <h3 id="destination-auth-title">
+              Sign Up / Login to continue
+            </h3>
+
+            <p>
+              Please log in or create an account to continue.
+            </p>
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => goToAuth("login")}
+            >
+              Login
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => goToAuth("signup")}
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
