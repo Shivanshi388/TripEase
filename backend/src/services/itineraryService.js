@@ -7,17 +7,54 @@ const verifyTripOwnership = async (userId, tripId) => {
   if (!trip) throw new ApiError(404, "Trip not found");
   return trip;
 };
+
+const getUtcDay = (value) => {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new ApiError(400, "Invalid itinerary date");
+  }
+
+  return Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  );
+};
+
+const validateItineraryDayAndDate = (trip, day, dateValue) => {
+  const start = getUtcDay(trip.startDate);
+  const end = getUtcDay(trip.endDate);
+  const date = getUtcDay(dateValue);
+
+  if (date < start || date > end) {
+    throw new ApiError(400, "Itinerary date must fall within the trip dates");
+  }
+
+  const expectedDay = Math.floor((date - start) / 86400000) + 1;
+
+  if (!Number.isInteger(Number(day)) || Number(day) !== expectedDay) {
+    throw new ApiError(
+      400,
+      "Itinerary day must match its date relative to the trip start date"
+    );
+  }
+};
+
 const createItinerary = async (userId, data) => {
   const trip = await verifyTripOwnership(userId, data.tripId);
-  const start = new Date(trip.startDate); start.setHours(0, 0, 0, 0);
-  const end = new Date(trip.endDate); end.setHours(0, 0, 0, 0);
-  const date = new Date(data.date); date.setHours(0, 0, 0, 0);
-  const tripDays = Math.floor((end - start) / 86400000) + 1;
-  if (date < start || date > end || Number(data.day) > tripDays) {
-    throw new ApiError(400, "Itinerary date and day must fall within the trip dates");
-  }
-  return Itinerary.create({ tripId: data.tripId, day: data.day, date: data.date, activities: data.activities, userId });
+
+  validateItineraryDayAndDate(trip, data.day, data.date);
+
+  return Itinerary.create({
+    tripId: data.tripId,
+    day: data.day,
+    date: data.date,
+    activities: data.activities,
+    userId,
+  });
 };
+
 const getTripItinerary = async (userId, tripId) => {
   await verifyTripOwnership(userId, tripId);
   return Itinerary.find({ tripId, userId }).sort({ day: 1, date: 1 });
@@ -28,21 +65,37 @@ const getDayItinerary = async (userId, tripId, day) => {
 };
 const updateItinerary = async (userId, itineraryId, data) => {
   const updates = {};
-  for (const field of ["day", "date", "activities"]) if (data[field] !== undefined) updates[field] = data[field];
-  if (!Object.keys(updates).length) throw new ApiError(400, "Provide day, date, or activities to update");
-  const existing = await Itinerary.findOne({ _id: itineraryId, userId });
-  if (!existing) throw new ApiError(404, "Itinerary not found");
-  if (updates.day !== undefined || updates.date !== undefined) {
-    const trip = await verifyTripOwnership(userId, existing.tripId);
-    const day = Number(updates.day ?? existing.day);
-    const start = new Date(trip.startDate); start.setHours(0, 0, 0, 0);
-    const end = new Date(trip.endDate); end.setHours(0, 0, 0, 0);
-    const date = new Date(updates.date ?? existing.date); date.setHours(0, 0, 0, 0);
-    const tripDays = Math.floor((end - start) / 86400000) + 1;
-    if (day < 1 || day > tripDays || date < start || date > end) throw new ApiError(400, "Itinerary date and day must fall within the trip dates");
+
+  for (const field of ["day", "date", "activities"]) {
+    if (data[field] !== undefined) {
+      updates[field] = data[field];
+    }
   }
-  return Itinerary.findOneAndUpdate({ _id: itineraryId, userId }, { $set: updates }, { new: true, runValidators: true });
+
+  if (!Object.keys(updates).length) {
+    throw new ApiError(400, "Provide day, date, or activities to update");
+  }
+
+  const existing = await Itinerary.findOne({ _id: itineraryId, userId });
+
+  if (!existing) {
+    throw new ApiError(404, "Itinerary not found");
+  }
+
+  // Validate the resulting day/date pair, including unchanged existing values.
+  const trip = await verifyTripOwnership(userId, existing.tripId);
+  const resultingDay = updates.day ?? existing.day;
+  const resultingDate = updates.date ?? existing.date;
+
+  validateItineraryDayAndDate(trip, resultingDay, resultingDate);
+
+  return Itinerary.findOneAndUpdate(
+    { _id: itineraryId, userId },
+    { $set: updates },
+    { new: true, runValidators: true }
+  );
 };
+
 const deleteItinerary = async (userId, itineraryId) => {
   const itinerary = await Itinerary.findOneAndDelete({ _id: itineraryId, userId });
   if (!itinerary) throw new ApiError(404, "Itinerary not found");
