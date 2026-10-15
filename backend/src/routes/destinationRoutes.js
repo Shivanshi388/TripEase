@@ -1,33 +1,14 @@
+const express = require("express");
+const { param } = require("express-validator");
+const validateMiddleware = require("../middleware/validateMiddleware");
 const { getCoordinates } = require("../services/mapsService");
 const { getWeather } = require("../services/weatherService");
-const express = require("express");
-const {
-  getDestinations,
-  getDestinationById,
-} = require("../controllers/destinationController");
-
+const { getDestinations, getDestinationById } = require("../controllers/destinationController");
+const asyncHandler = require("../utils/asyncHandler");
+const ApiError = require("../utils/ApiError");
 const router = express.Router();
-
 router.get("/", getDestinations);
-
-router.get("/weather/:city", async (req, res, next) => {
-  try {
-    const weather = await getWeather(req.params.city);
-    res.json(weather);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/coordinates/:location", async (req, res, next) => {
-  try {
-    const coordinates = await getCoordinates(req.params.location);
-    res.json(coordinates);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/:id", getDestinationById);
-
+router.get("/weather/:city", asyncHandler(async (req, res) => res.json(await getWeather(req.params.city))));
+router.get("/coordinates/:location", asyncHandler(async (req, res) => res.json(await getCoordinates(req.params.location))));
+router.get("/:id", [param("id").isMongoId().withMessage("Invalid destination ID")], validateMiddleware, getDestinationById);
 module.exports = router;
