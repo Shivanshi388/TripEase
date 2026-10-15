@@ -1,56 +1,14 @@
 const express = require("express");
 const router = express.Router();
-
 const authMiddleware = require("../middleware/authMiddleware");
 const validateMiddleware = require("../middleware/validateMiddleware");
-
-const {
-  createExpenseValidator,
-  expenseIdValidator,
-} = require("../validators/budgetValidator");
-
-const {
-  createExpense,
-  getTripExpenses,
-  getBudgetSummary,
-  deleteExpense,
-  getBudgetAnalytics,
-  getBudgetAlerts,
-} = require("../controllers/budgetController");
-
-// All budget routes require authentication
+const { createExpenseValidator, expenseIdValidator, tripExpenseValidator } = require("../validators/budgetValidator");
+const controller = require("../controllers/budgetController");
 router.use(authMiddleware);
-
-// Create an expense
-router.post(
-  "/expenses",
-  createExpenseValidator,
-  validateMiddleware,
-  createExpense
-);
-
-// Get all expenses for a trip
-router.get("/trips/:tripId/expenses", getTripExpenses);
-
-// Get budget summary for a trip
-router.get("/trips/:tripId/summary", getBudgetSummary);
-
-// Delete an expense
-router.delete(
-  "/expenses/:id",
-  expenseIdValidator,
-  validateMiddleware,
-  deleteExpense
-);
-
-router.get(
-  "/trips/:tripId/analytics",
-  getBudgetAnalytics
-);
-
-router.get(
-  "/trips/:tripId/alerts",
-  getBudgetAlerts
-);
-
+router.post("/expenses", createExpenseValidator, validateMiddleware, controller.createExpense);
+router.get("/trips/:tripId/expenses", tripExpenseValidator, validateMiddleware, controller.getTripExpenses);
+router.get("/trips/:tripId/summary", tripExpenseValidator, validateMiddleware, controller.getBudgetSummary);
+router.delete("/expenses/:id", expenseIdValidator, validateMiddleware, controller.deleteExpense);
+router.get("/trips/:tripId/analytics", tripExpenseValidator, validateMiddleware, controller.getBudgetAnalytics);
+router.get("/trips/:tripId/alerts", tripExpenseValidator, validateMiddleware, controller.getBudgetAlerts);
 module.exports = router;

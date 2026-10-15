@@ -2,6 +2,22 @@ const Expense = require("../models/Expense");
 const Trip = require("../models/Trip");
 const ApiError = require("../utils/ApiError");
 
+const calculateBudgetSummary = (budget, expenses) => {
+  const totalSpent = expenses.reduce((total, expense) => total + Number(expense.amount || 0), 0);
+  const categoryTotals = {};
+  expenses.forEach((expense) => {
+    categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + Number(expense.amount || 0);
+  });
+  return {
+    budget,
+    totalSpent,
+    remaining: budget - totalSpent,
+    percentageUsed: budget > 0 ? Number(((totalSpent / budget) * 100).toFixed(2)) : 0,
+    categoryTotals,
+    expenseCount: expenses.length,
+  };
+};
+
 const createExpense = async (userId, expenseData) => {
   const { tripId } = expenseData;
 
@@ -15,8 +31,13 @@ const createExpense = async (userId, expenseData) => {
   }
 
   const expense = await Expense.create({
-    ...expenseData,
+    tripId: expenseData.tripId,
     userId,
+    category: expenseData.category,
+    description: expenseData.description,
+    amount: expenseData.amount,
+    currency: expenseData.currency || "INR",
+    date: expenseData.date,
   });
 
   return expense;
@@ -53,32 +74,7 @@ const getBudgetSummary = async (userId, tripId) => {
     userId,
   });
 
-  const totalSpent = expenses.reduce(
-    (total, expense) => total + expense.amount,
-    0
-  );
-
-  const budget = trip.budget || 0;
-  const remaining = budget - totalSpent;
-
-  const categoryTotals = {};
-
-  expenses.forEach((expense) => {
-    categoryTotals[expense.category] =
-      (categoryTotals[expense.category] || 0) + expense.amount;
-  });
-
-  const percentageUsed =
-    budget > 0 ? Number(((totalSpent / budget) * 100).toFixed(2)) : 0;
-
-  return {
-    budget,
-    totalSpent,
-    remaining,
-    percentageUsed,
-    categoryTotals,
-    expenseCount: expenses.length,
-  };
+  return calculateBudgetSummary(trip.budget || 0, expenses);
 };
 
 const deleteExpense = async (userId, expenseId) => {
@@ -181,4 +177,5 @@ module.exports = {
   deleteExpense,
   getBudgetAnalytics,
   getBudgetAlerts,
+  calculateBudgetSummary,
 };
