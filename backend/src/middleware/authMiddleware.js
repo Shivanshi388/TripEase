@@ -1,39 +1,27 @@
-
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !/^Bearer\s+\S+$/i.test(authHeader)) {
+    return res.status(401).json({ success: false, message: "Authentication required. Please log in." });
+  }
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    return res.status(503).json({ success: false, message: "Authentication is not configured on this server." });
+  }
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        message: "Authentication required. Please log in.",
-      });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    if (!token || !process.env.JWT_SECRET) {
-      return res.status(401).json({
-        message: "Invalid or missing authentication.",
-      });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (!decoded.id) {
-      return res.status(401).json({
-        message: "Invalid authentication token.",
-      });
-    }
-
-    req.user = { id: decoded.id };
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      message: "Invalid or expired token. Please log in again.",
+    const token = authHeader.split(/\s+/)[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      issuer: "tripease-api",
+      audience: "tripease-client",
     });
+    if (!decoded.id || !mongoose.isValidObjectId(decoded.id)) {
+      return res.status(401).json({ success: false, message: "Invalid authentication token." });
+    }
+    req.user = { id: decoded.id };
+    return next();
+  } catch (error) {
+    return res.status(401).json({ success: false, message: "Invalid or expired token. Please log in again." });
   }
 };
-
 module.exports = authMiddleware;
