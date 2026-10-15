@@ -1,4 +1,4 @@
-import { useWishlist } from "../context/WishlistContext";
+﻿import { useWishlist } from "../context/WishlistContext";
 
 function Wishlist() {
   const { wishlist, removeFromWishlist } = useWishlist();
@@ -14,10 +14,9 @@ function Wishlist() {
 
         {wishlist.length === 0 ? (
           <div className="empty-state">
-            <div>❤️</div>
+            <div aria-hidden="true">♡</div>
             <h2>Your wishlist is empty</h2>
             <p>Save destinations you love and they'll appear here.</p>
-
             <a href="#explore" className="btn btn-primary">
               Explore Destinations
             </a>
@@ -26,11 +25,20 @@ function Wishlist() {
           <div className="destination-grid">
             {wishlist.map((destination) => (
               <article className="destination-card" key={destination.id}>
-                <div className="destination-image">
-                  <span>{destination.emoji || "📍"}</span>
-                </div>
+                {destination.image ? (
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="destination-card-image"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="destination-image">
+                    <span aria-hidden="true">📍</span>
+                  </div>
+                )}
 
-                <div className="destination-info">
+                <div className="destination-content">
                   <h3>{destination.name}</h3>
                   <p>{destination.description || "Saved destination"}</p>
 
@@ -40,8 +48,10 @@ function Wishlist() {
                     </a>
 
                     <button
+                      type="button"
                       className="btn btn-secondary"
                       onClick={() => removeFromWishlist(destination.id)}
+                      aria-label={`Remove ${destination.name} from wishlist`}
                     >
                       Remove
                     </button>

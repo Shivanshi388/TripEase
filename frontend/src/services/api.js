@@ -1,10 +1,13 @@
-const API_BASE_URL = '/api';
+﻿const API_BASE_URL = "/api";
 
 async function apiRequest(endpoint, options = {}) {
+  const token = localStorage.getItem("tripease_token");
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
   });
@@ -20,24 +23,24 @@ async function apiRequest(endpoint, options = {}) {
 
 const api = {
   get: (endpoint, options = {}) =>
-    apiRequest(endpoint, { ...options, method: 'GET' }),
+    apiRequest(endpoint, { ...options, method: "GET" }),
 
   post: (endpoint, body, options = {}) =>
     apiRequest(endpoint, {
       ...options,
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(body),
     }),
 
   put: (endpoint, body, options = {}) =>
     apiRequest(endpoint, {
       ...options,
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(body),
     }),
 
   delete: (endpoint, options = {}) =>
-    apiRequest(endpoint, { ...options, method: 'DELETE' }),
+    apiRequest(endpoint, { ...options, method: "DELETE" }),
 };
 
 export default api;
