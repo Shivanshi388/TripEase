@@ -24,14 +24,6 @@ function Recommendations() {
             </div>
           ))}
         </div>
-
-        <div className="ml-note">
-          <strong>🤖 Future ML integration</strong>
-          <p>
-            This section can later connect to the team's Python ML model to
-            generate personalized travel recommendations.
-          </p>
-        </div>
       </div>
     </section>
   );
