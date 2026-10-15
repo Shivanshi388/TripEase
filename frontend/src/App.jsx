@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Wishlist from "./pages/Wishlist";
 import MyTrips from "./pages/MyTrips";
+import PlanTrip from "./pages/PlanTrip";
 import Recommendations from "./pages/Recommendations";
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
     if (route === "profile") return <Profile />;
     if (route === "wishlist") return <Wishlist />;
     if (route === "my-trips") return <MyTrips />;
+    if (route === "plan-trip" || route.startsWith("plan-trip/")) return <PlanTrip destinationId={route.split("/")[1]} />;
     if (route === "recommendations") return <Recommendations />;
 
     if (route.startsWith("destination/")) {
