@@ -14,6 +14,7 @@ const healthRoutes = require("./routes/healthRoutes");
 const { notFoundMiddleware, errorMiddleware } = require("./middleware/errorMiddleware");
 
 const app = express();
+app.set('trust proxy', 1);
 const configuredOrigins = (process.env.FRONTEND_ORIGIN || "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173")
   .split(",").map((origin) => origin.trim()).filter(Boolean);
 
