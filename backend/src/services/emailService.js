@@ -1,47 +1,39 @@
-﻿const nodemailer = require("nodemailer");
+﻿async function sendEmail({ to, subject, text, html }) {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not configured");
+  }
 
-let transporter;
+  if (!process.env.EMAIL_FROM) {
+    throw new Error("EMAIL_FROM is not configured");
+  }
 
-function getTransporter() {
-  if (transporter) return transporter;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: process.env.EMAIL_FROM,
+      to: [to],
+      subject,
+      text,
+      html,
+    }),
+    signal: AbortSignal.timeout(15000),
+  });
 
-  const required = [
-    "SMTP_HOST",
-    "SMTP_PORT",
-    "SMTP_USER",
-    "SMTP_PASS",
-    "EMAIL_FROM",
-  ];
+  const result = await response.json();
 
-  const missing = required.filter((key) => !process.env[key]);
-
-  if (missing.length) {
+  if (!response.ok) {
     throw new Error(
-      `Email configuration is missing: ${missing.join(", ")}`
+      `Resend API error (${response.status}): ${
+        result.message || JSON.stringify(result)
+      }`
     );
   }
 
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-
-  return transporter;
-}
-
-async function sendEmail({ to, subject, text, html }) {
-  return getTransporter().sendMail({
-    from: process.env.EMAIL_FROM,
-    to,
-    subject,
-    text,
-    html,
-  });
+  return result;
 }
 
 async function sendVerificationEmail(email, token) {
