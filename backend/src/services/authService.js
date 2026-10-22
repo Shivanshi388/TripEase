@@ -1,4 +1,4 @@
-
+﻿
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/User");
@@ -133,7 +133,7 @@ const resendVerificationEmail = async ({ email }) => {
   try {
     await sendVerificationEmail(user.email, verificationToken);
   } catch (error) {
-    console.error("Resend verification email failed:", error.message);
+    console.error("Resend verification email failed:", { message: error.message, name: error.name, cause: error.cause, stack: error.stack });
     throw new ApiError(503, "Unable to send the email right now. Please try again later.");
   }
 
@@ -228,3 +228,4 @@ module.exports = {
   forgotPassword,
   resetPassword,
 };
+
