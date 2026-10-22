@@ -1,59 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
 const authMiddleware = require("../middleware/authMiddleware");
 const validateMiddleware = require("../middleware/validateMiddleware");
-
-const {
-  createItineraryValidator,
-  itineraryIdValidator,
-  tripItineraryValidator,
-  dayItineraryValidator,
-} = require("../validators/itineraryValidator");
-
-const {
-  createItinerary,
-  getTripItinerary,
-  getDayItinerary,
-  updateItinerary,
-  deleteItinerary,
-} = require("../controllers/itineraryController");
-
+const validators = require("../validators/itineraryValidator");
+const controller = require("../controllers/itineraryController");
 router.use(authMiddleware);
-
-router.post(
-  "/",
-  createItineraryValidator,
-  validateMiddleware,
-  createItinerary
-);
-
-router.get(
-  "/trip/:tripId",
-  tripItineraryValidator,
-  validateMiddleware,
-  getTripItinerary
-);
-
-router.get(
-  "/trip/:tripId/day/:day",
-  dayItineraryValidator,
-  validateMiddleware,
-  getDayItinerary
-);
-
-router.put(
-  "/:id",
-  itineraryIdValidator,
-  validateMiddleware,
-  updateItinerary
-);
-
-router.delete(
-  "/:id",
-  itineraryIdValidator,
-  validateMiddleware,
-  deleteItinerary
-);
-
+router.post("/", validators.createItineraryValidator, validateMiddleware, controller.createItinerary);
+router.get("/trip/:tripId", validators.tripItineraryValidator, validateMiddleware, controller.getTripItinerary);
+router.get("/trip/:tripId/day/:day", validators.dayItineraryValidator, validateMiddleware, controller.getDayItinerary);
+router.put("/:id", validators.updateItineraryValidator, validateMiddleware, controller.updateItinerary);
+router.delete("/:id", validators.itineraryIdValidator, validateMiddleware, controller.deleteItinerary);
 module.exports = router;

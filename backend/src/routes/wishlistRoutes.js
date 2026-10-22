@@ -1,17 +1,11 @@
 const express = require("express");
+const { body, param } = require("express-validator");
 const authMiddleware = require("../middleware/authMiddleware");
-const {
-  getWishlist,
-  addToWishlist,
-  removeFromWishlist,
-} = require("../controllers/wishlistController");
-
+const validateMiddleware = require("../middleware/validateMiddleware");
+const controller = require("../controllers/wishlistController");
 const router = express.Router();
-
 router.use(authMiddleware);
-
-router.get("/", getWishlist);
-router.post("/", addToWishlist);
-router.delete("/:id", removeFromWishlist);
-
+router.get("/", controller.getWishlist);
+router.post("/", [body("destination").isMongoId().withMessage("Valid destination ID is required")], validateMiddleware, controller.addToWishlist);
+router.delete("/:id", [param("id").isMongoId().withMessage("Invalid wishlist item ID")], validateMiddleware, controller.removeFromWishlist);
 module.exports = router;

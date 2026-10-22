@@ -1,50 +1,66 @@
-const data = {
-  goa: {
-    name: "Goa",
-    emoji: "🏝️",
-    description:
-      "A beautiful destination famous for beaches, sunsets, food and unforgettable experiences.",
-  },
-  manali: {
-    name: "Manali",
-    emoji: "🏔️",
-    description:
-      "A peaceful mountain destination perfect for nature, adventure and relaxing getaways.",
-  },
-  jaipur: {
-    name: "Jaipur",
-    emoji: "🏰",
-    description:
-      "Explore royal palaces, historic forts, colorful markets and amazing Rajasthani cuisine.",
-  },
-  kerala: {
-    name: "Kerala",
-    emoji: "🌴",
-    description:
-      "Discover peaceful backwaters, beautiful landscapes and rich local culture.",
-  },
-  ladakh: {
-    name: "Ladakh",
-    emoji: "⛰️",
-    description:
-      "An adventurous mountain destination with breathtaking landscapes and unique experiences.",
-  },
-  udaipur: {
-    name: "Udaipur",
-    emoji: "🏛️",
-    description:
-      "Known for beautiful lakes, palaces and unforgettable royal architecture.",
-  },
-};
+﻿import { useState } from "react";
+import { Heart, X } from "lucide-react";
+import destinations from "../data/destinations";
+import { useAuth } from "../context/AuthContext";
 
 function DestinationPage({ destination }) {
-  const place = data[destination] || data.goa;
+  const { user } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [authReturnTo, setAuthReturnTo] = useState("");
+
+  const place = destinations.find(
+    (d) => d.id === Number(destination)
+  );
+
+  const handlePlanTrip = () => {
+    if (!user) {
+      setAuthReturnTo(`plan-trip/${place.id}`);
+      setShowAuthPrompt(true);
+      return;
+    }
+
+    window.location.hash = `plan-trip/${place.id}`;
+  };
+
+  const handleAddToWishlist = () => {
+    if (!user) {
+      setAuthReturnTo("wishlist");
+      setShowAuthPrompt(true);
+      return;
+    }
+
+    window.location.hash = "wishlist";
+  };
+
+  const goToAuth = (page) => {
+    sessionStorage.setItem(
+      "tripease_after_login",
+      authReturnTo || `plan-trip/${place.id}`
+    );
+
+    setShowAuthPrompt(false);
+    window.location.hash = page;
+  };
+
+  if (!place) {
+    return (
+      <section className="page-section">
+        <div className="container">
+          <h1>Destination not found</h1>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="page-section">
       <div className="container">
         <div className="destination-detail-hero">
-          <div className="big-emoji">{place.emoji}</div>
+          <img
+            src={place.image}
+            alt={place.name}
+            className="destination-detail-image"
+          />
 
           <div>
             <span>DESTINATION GUIDE</span>
@@ -52,40 +68,42 @@ function DestinationPage({ destination }) {
             <p>{place.description}</p>
 
             <div className="detail-actions">
-              <a href="#my-trips" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handlePlanTrip}
+              >
                 Plan a Trip
-              </a>
+              </button>
 
-              <a href="#wishlist" className="btn btn-secondary">
-                ♡ Add to Wishlist
-              </a>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleAddToWishlist}
+              >
+                Add to Wishlist
+              </button>
             </div>
           </div>
         </div>
 
         <div className="detail-grid">
           <div className="detail-box">
-            <span>📍</span>
+            <span>Location</span>
             <h3>Location</h3>
-            <p>India</p>
+            <p>{place.location}</p>
           </div>
 
           <div className="detail-box">
-            <span>⭐</span>
-            <h3>Rating</h3>
-            <p>4.8 / 5</p>
-          </div>
-
-          <div className="detail-box">
-            <span>🌤️</span>
+            <span>Category</span>
             <h3>Best for</h3>
-            <p>Leisure & Adventure</p>
+            <p>{place.category}</p>
           </div>
 
           <div className="detail-box">
-            <span>💰</span>
+            <span>Budget</span>
             <h3>Budget</h3>
-            <p>Moderate</p>
+            <p>{place.budget}</p>
           </div>
         </div>
 
@@ -98,10 +116,60 @@ function DestinationPage({ destination }) {
           </p>
 
           <a href="#recommendations" className="btn btn-primary">
-            Get Recommendations →
+            Get Recommendations
           </a>
         </div>
       </div>
+
+      {showAuthPrompt && (
+        <div
+          className="auth-prompt-overlay"
+          onClick={() => setShowAuthPrompt(false)}
+        >
+          <div
+            className="auth-prompt"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="destination-auth-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="auth-prompt-close"
+              aria-label="Close"
+              onClick={() => setShowAuthPrompt(false)}
+            >
+              <X size={20} />
+            </button>
+
+            <Heart size={32} />
+
+            <h3 id="destination-auth-title">
+              Sign Up / Login to continue
+            </h3>
+
+            <p>
+              Please log in or create an account to continue.
+            </p>
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => goToAuth("login")}
+            >
+              Login
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => goToAuth("signup")}
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
