@@ -1,5 +1,4 @@
-﻿
-const bcrypt = require("bcryptjs");
+﻿const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/User");
 const ApiError = require("../utils/ApiError");
@@ -22,7 +21,7 @@ const validatePassword = (password) => {
   ) {
     throw new ApiError(
       400,
-      "Password must be at least 8 characters and no more than 72 bytes"
+      "Password must be at least 8 characters and no more than 72 bytes",
     );
   }
 };
@@ -75,7 +74,7 @@ const register = async ({ name, email, password }) => {
     console.error("Verification email could not be sent:", error.message);
     throw new ApiError(
       503,
-      "Your account was created, but the verification email could not be sent. Please request another verification email."
+      "Your account was created, but the verification email could not be sent. Please request another verification email.",
     );
   }
 
@@ -133,8 +132,16 @@ const resendVerificationEmail = async ({ email }) => {
   try {
     await sendVerificationEmail(user.email, verificationToken);
   } catch (error) {
-    console.error("Resend verification email failed:", { message: error.message, name: error.name, cause: error.cause, stack: error.stack });
-    throw new ApiError(503, "Unable to send the email right now. Please try again later.");
+    console.error("Resend verification email failed:", {
+      message: error.message,
+      name: error.name,
+      cause: error.cause,
+      stack: error.stack,
+    });
+    throw new ApiError(
+      503,
+      "Unable to send the email right now. Please try again later.",
+    );
   }
 
   return result;
@@ -146,8 +153,12 @@ const login = async ({ email, password }) => {
   }
 
   const cleanEmail = email.trim().toLowerCase();
-  const user = await User.findOne({ email: cleanEmail }).select("+passwordHash");
-  const matches = user ? await bcrypt.compare(password, user.passwordHash) : false;
+  const user = await User.findOne({ email: cleanEmail }).select(
+    "+passwordHash",
+  );
+  const matches = user
+    ? await bcrypt.compare(password, user.passwordHash)
+    : false;
 
   if (!matches) {
     throw new ApiError(401, "Invalid email or password");
@@ -156,7 +167,7 @@ const login = async ({ email, password }) => {
   if (!user.isEmailVerified) {
     throw new ApiError(
       403,
-      "Please verify your email before logging in. Check your inbox or request a new verification email."
+      "Please verify your email before logging in. Check your inbox or request a new verification email.",
     );
   }
 
@@ -175,7 +186,8 @@ const forgotPassword = async ({ email }) => {
   const user = await User.findOne({ email: cleanEmail });
 
   const result = {
-    message: "If an account exists for that email, a password reset link will be sent.",
+    message:
+      "If an account exists for that email, a password reset link will be sent.",
   };
 
   if (!user) return result;
@@ -190,7 +202,10 @@ const forgotPassword = async ({ email }) => {
     await sendPasswordResetEmail(user.email, resetToken);
   } catch (error) {
     console.error("Password reset email failed:", error.message);
-    throw new ApiError(503, "Unable to send the reset email right now. Please try again later.");
+    throw new ApiError(
+      503,
+      "Unable to send the reset email right now. Please try again later.",
+    );
   }
 
   return result;
@@ -228,4 +243,3 @@ module.exports = {
   forgotPassword,
   resetPassword,
 };
-
