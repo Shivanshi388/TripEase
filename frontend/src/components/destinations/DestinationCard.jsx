@@ -35,7 +35,8 @@ function DestinationCard({ destination }) {
       <img
         src={destination.image}
         alt={destination.name}
-        className="destination-card-image"
+        width={380}
+        height={247}
       />
 
       <button
@@ -59,7 +60,6 @@ function DestinationCard({ destination }) {
 
       <div className="destination-content">
         <h3>{destination.name}</h3>
-        <p>{destination.description}</p>
 
         <a
           href={`#destination/${destination.id}`}
