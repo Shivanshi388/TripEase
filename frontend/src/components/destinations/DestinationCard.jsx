@@ -4,28 +4,50 @@ import { useWishlist } from "../../context/WishlistContext";
 import { useAuth } from "../../context/AuthContext";
 
 function DestinationCard({ destination }) {
-  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const {
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
+  } = useWishlist();
+
   const { user } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   const isSaved = wishlist.some(
     (item) => String(item.id) === String(destination.id)
   );
 
-  const handleWishlistClick = () => {
+  const handleWishlistClick = async () => {
     if (!user) {
       setShowAuthPrompt(true);
       return;
     }
 
-    if (isSaved) {
-      removeFromWishlist(destination.id);
-    } else {
-      addToWishlist(destination);
+    if (busy) return;
+
+    setBusy(true);
+    setActionError("");
+
+    try {
+      if (isSaved) {
+        await removeFromWishlist(destination.id);
+      } else {
+        await addToWishlist(destination);
+      }
+    } catch (error) {
+      setActionError(error.message || "Unable to update your wishlist.");
+    } finally {
+      setBusy(false);
     }
   };
 
   const goToAuth = (page) => {
+    sessionStorage.setItem(
+      "tripease_after_login",
+      window.location.hash.replace(/^#/, "") || "explore"
+    );
     setShowAuthPrompt(false);
     window.location.hash = page;
   };
@@ -35,13 +57,13 @@ function DestinationCard({ destination }) {
       <img
         src={destination.image}
         alt={destination.name}
-        width={380}
-        height={247}
+        className="destination-card-image"
       />
 
       <button
         type="button"
         onClick={handleWishlistClick}
+        disabled={busy}
         className={`wishlist-btn${isSaved ? " active" : ""}`}
         aria-label={
           isSaved
@@ -49,7 +71,13 @@ function DestinationCard({ destination }) {
             : `Add ${destination.name} to wishlist`
         }
         aria-pressed={isSaved}
-        title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+        title={
+          busy
+            ? "Updating wishlist..."
+            : isSaved
+              ? "Remove from wishlist"
+              : "Add to wishlist"
+        }
       >
         <Heart
           size={22}
@@ -58,8 +86,15 @@ function DestinationCard({ destination }) {
         />
       </button>
 
+      {actionError && (
+        <p className="trip-login-error" role="alert">
+          {actionError}
+        </p>
+      )}
+
       <div className="destination-content">
         <h3>{destination.name}</h3>
+        <p>{destination.description}</p>
 
         <a
           href={`#destination/${destination.id}`}
@@ -92,7 +127,10 @@ function DestinationCard({ destination }) {
 
             <Heart size={32} />
             <h3 id="auth-prompt-title">Sign Up / Login to continue</h3>
-            <p>Please log in or create an account to save destinations to your wishlist.</p>
+            <p>
+              Please log in or create an account to save destinations
+              to your wishlist.
+            </p>
 
             <button
               type="button"
