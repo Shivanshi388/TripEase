@@ -1,7 +1,10 @@
+from pathlib import Path
+
 from app.models.destination_recommender import DestinationRecommender
 
 
-DATA_PATH = "data/processed/encoded_features.csv"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA_PATH = PROJECT_ROOT / "data" / "processed" / "encoded_features.csv"
 
 
 def train():

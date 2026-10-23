@@ -1,5 +1,6 @@
 
 from pathlib import Path
+import re
 
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
@@ -8,6 +9,56 @@ from sklearn.preprocessing import StandardScaler
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 RAW_DATA_PATH = PROJECT_ROOT / "data" / "raw" / "destinations.csv"
+
+_MONTH_ALIASES = {
+    "jan": 1, "january": 1, "feb": 2, "february": 2,
+    "mar": 3, "march": 3, "apr": 4, "april": 4,
+    "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
+    "aug": 8, "august": 8, "sep": 9, "sept": 9, "september": 9,
+    "oct": 10, "october": 10, "nov": 11, "november": 11,
+    "dec": 12, "december": 12,
+}
+_SEASON_MONTHS = {
+    "winter": {10, 11, 12, 1, 2},
+    "summer": {3, 4, 5, 6},
+    "monsoon": {6, 7, 8, 9},
+    "rainy": {6, 7, 8, 9},
+    "spring": {2, 3, 4},
+    "autumn": {9, 10, 11},
+    "fall": {9, 10, 11},
+}
+
+
+def _months_in_range(value):
+    """Convert values such as 'Nov-Feb' or 'October' to month numbers."""
+    tokens = re.findall(r"[A-Za-z]+", str(value or ""))
+    months = [_MONTH_ALIASES[token.lower()] for token in tokens if token.lower() in _MONTH_ALIASES]
+    if not months:
+        return set()
+    if len(months) == 1:
+        return {months[0]}
+    start, end = months[0], months[1]
+    result = set()
+    current = start
+    while True:
+        result.add(current)
+        if current == end:
+            break
+        current = current % 12 + 1
+    return result
+
+
+def _requested_season_months(value):
+    """Accept season names (summer/winter/monsoon) or month/range values."""
+    normalized = str(value or "").strip().lower()
+    if normalized in _SEASON_MONTHS:
+        return _SEASON_MONTHS[normalized]
+    months = _months_in_range(normalized)
+    if months:
+        return months
+    raise ValueError(
+        "Season must be summer, winter, monsoon, spring, autumn, or a month/range such as Oct-Mar."
+    )
 
 
 class DestinationRecommender:
@@ -48,13 +99,31 @@ class DestinationRecommender:
     def recommend(
         self, budget, interests, duration, travellers, top_n=5
     ):
+        if budget <= 0:
+            raise ValueError("Budget must be greater than zero.")
         if duration <= 0 or travellers <= 0:
             raise ValueError(
                 "Duration and travellers must be greater than zero."
             )
 
-        daily_budget = budget / duration
-        interests = [interest.strip().lower() for interest in interests]
+        # The UI budget is the total for the whole party. Destination costs in
+        # the dataset are daily estimates, so compare a per-person daily budget.
+        daily_budget = budget / duration / travellers
+
+        # Translate UI wording to the exact binary features in encoded_features.csv.
+        aliases = {
+            "beach": "beach", "beaches": "beach",
+            "mountain": "mountains", "mountains": "mountains",
+            "nature": "nature", "adventure": "adventure",
+            "heritage": "heritage", "culture": "culture",
+            "spiritual": "spiritual", "city": "city",
+            "backwater": "backwaters", "backwaters": "backwaters",
+        }
+        normalized_interests = set()
+        for interest in interests or []:
+            key = str(interest).strip().lower()
+            if key in aliases:
+                normalized_interests.add(aliases[key])
 
         user_vector = []
         interest_features = self.feature_columns[3:]
@@ -67,13 +136,13 @@ class DestinationRecommender:
             elif feature == "popularity":
                 user_vector.append(self.data["popularity"].mean())
             elif feature in interest_features:
-                user_vector.append(
-                    1 if feature in interests else 0
-                )
+                user_vector.append(1 if feature in normalized_interests else 0)
             else:
                 user_vector.append(0)
 
-        scaled_user = self.scaler.transform([user_vector])
+        scaled_user = self.scaler.transform(
+            pd.DataFrame([user_vector], columns=self.feature_columns)
+        )
         scores = cosine_similarity(
             scaled_user, self.features
         )[0]
@@ -123,9 +192,10 @@ def recommend_destinations(
         df = df[df["avg_daily_cost"] <= max_daily_cost]
 
     if season and "best_season" in df.columns:
+        wanted_months = _requested_season_months(season)
         df = df[
-            df["best_season"].astype(str).str.contains(
-                season, case=False, na=False
+            df["best_season"].map(
+                lambda value: bool(wanted_months & _months_in_range(value))
             )
         ]
 

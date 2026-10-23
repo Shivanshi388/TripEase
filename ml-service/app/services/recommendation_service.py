@@ -1,9 +1,12 @@
+from pathlib import Path
+
 import pandas as pd
 from app.models.destination_recommender import DestinationRecommender
 
 
-MODEL_PATH = "../data/processed/encoded_features.csv"
-DESTINATIONS_PATH = "../data/raw/destinations.csv"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+MODEL_PATH = PROJECT_ROOT / "data" / "processed" / "encoded_features.csv"
+DESTINATIONS_PATH = PROJECT_ROOT / "data" / "raw" / "destinations.csv"
 
 recommender = DestinationRecommender(MODEL_PATH)
 

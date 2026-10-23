@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../services/api";
 import destinations from "../data/destinations";
 
-const interestsList = ["Nature", "Adventure", "Beaches", "Culture", "Food", "Shopping"];
+const interestsList = ["Nature", "Adventure", "Beaches", "Culture", "Heritage", "Mountains", "Spiritual", "City", "Backwaters"];
 
 function Recommendations() {
   const [tab, setTab] = useState("personalized");
@@ -466,7 +466,7 @@ function Recommendations() {
           {tab === "personalized" && (
             <>
               <h2>Personalise your recommendations</h2>
-              <label>Budget (₹)<input type="number" min="1" required value={form.budget} onChange={e => update("budget", e.target.value)} /></label>
+              <label>Total trip budget for all travellers (₹)<input type="number" min="1" required value={form.budget} onChange={e => update("budget", e.target.value)} /></label>
               <label>Trip duration (days)<input type="number" min="1" required value={form.duration} onChange={e => update("duration", e.target.value)} /></label>
               <label>Number of travellers<input type="number" min="1" required value={form.travellers} onChange={e => update("travellers", e.target.value)} /></label>
               <fieldset>
