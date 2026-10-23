@@ -36,6 +36,8 @@ function DestinationCard({ destination }) {
         src={destination.image}
         alt={destination.name}
         className="destination-card-image"
+        width={380}
+        height={247}
       />
 
       <button

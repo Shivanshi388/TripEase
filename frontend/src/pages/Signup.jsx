@@ -1,38 +1,29 @@
 ﻿import { useState } from "react";
 import authService from "../services/authService";
-import { useAuth } from "../context/AuthContext";
 import "./Signup.css";
 
 function Signup() {
-  const { login } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
-
     try {
-      await authService.register(name.trim(), email.trim(), password);
-
-      const result = await authService.login(email.trim(), password);
-
-      if (!result?.token || !result?.user) {
-        throw new Error("Your account was created, but automatic login failed. Please log in.");
-      }
-
-      login(result.user, result.token);
-      window.location.hash = "my-trips";
-    } catch (err) {
-      setError(
-        err?.response?.data?.message ||
-        err?.message ||
-        "Unable to create your account. Please try again."
+      const result = await authService.register(name.trim(), email.trim(), password);
+      setSuccess(
+        result?.message ||
+        "Account created. Check your email for the verification link before logging in."
       );
+      setPassword("");
+    } catch (err) {
+      setError(err?.message || "Unable to create your account. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -120,6 +111,11 @@ function Signup() {
             <p className="trip-signup-hint">Use at least 8 characters for your password.</p>
 
             {error && <p className="trip-signup-error" role="alert">{error}</p>}
+            {success && (
+              <p role="status">
+                {success} <a href="#login">Go to login</a>
+              </p>
+            )}
 
             <button type="submit" disabled={loading}>
               {loading ? "Creating your account..." : "Create Account"}

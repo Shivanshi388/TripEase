@@ -1,4 +1,4 @@
-import goa from "./images/goa.jpg";
+﻿import goa from "./images/goa.jpg";
 import manali from "./images/manali.jpg";
 import jaipur from "./images/jaipur.jpg";
 import rishikesh from "./images/rishikesh.jpg";

@@ -1,12 +1,11 @@
-
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem('tripease_user');
+      const savedUser = localStorage.getItem("tripease_user");
       return savedUser ? JSON.parse(savedUser) : null;
     } catch {
       return null;
@@ -14,16 +13,16 @@ export function AuthProvider({ children }) {
   });
 
   const login = (userData, token) => {
-    localStorage.setItem('tripease_user', JSON.stringify(userData));
-    localStorage.setItem('tripease_token', token);
+    localStorage.setItem("tripease_user", JSON.stringify(userData));
+    localStorage.setItem("tripease_token", token);
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem('tripease_user');
-    localStorage.removeItem('tripease_token');
+    localStorage.removeItem("tripease_user");
+    localStorage.removeItem("tripease_token");
     setUser(null);
-    window.location.hash = 'login';
+    window.location.hash = "login";
   };
 
   return (
@@ -36,4 +35,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-
