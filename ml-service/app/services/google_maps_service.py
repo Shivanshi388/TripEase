@@ -2,30 +2,51 @@ import json
 import logging
 import os
 import re
+import sqlite3
+import tempfile
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from difflib import SequenceMatcher
+from email.utils import parsedate_to_datetime
 from threading import Lock
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 OSRM_URL = "https://router.project-osrm.org/route/v1/driving"
 USER_AGENT = os.getenv("TRIPEASE_MAP_USER_AGENT", "TripEaseTravelPlanner/1.0")
-REQUEST_TIMEOUT = 15
-NOMINATIM_DELAY_SECONDS = 1.1
+REQUEST_TIMEOUT = max(5, int(os.getenv("TRIPEASE_MAP_TIMEOUT_SECONDS", "12")))
+NOMINATIM_DELAY_SECONDS = max(1.0, float(os.getenv("TRIPEASE_NOMINATIM_DELAY_SECONDS", "1.1")))
+NOMINATIM_BACKOFF_SECONDS = max(30, int(os.getenv("TRIPEASE_NOMINATIM_BACKOFF_SECONDS", "60")))
+NETWORK_ERROR_COOLDOWN_SECONDS = max(5, int(os.getenv("TRIPEASE_MAP_ERROR_COOLDOWN_SECONDS", "10")))
+GEOCODE_CACHE_TTL_SECONDS = 30 * 24 * 60 * 60
+GEOCODE_CACHE_DB_PATH = os.getenv(
+    "TRIPEASE_GEOCODE_CACHE_FILE",
+    os.path.join(tempfile.gettempdir(), "tripease-geocode-cache.sqlite3"),
+)
 
 logger = logging.getLogger(__name__)
 _request_lock = Lock()
+_cache_lock = Lock()
 _last_nominatim_request = 0.0
+_nominatim_backoff_until = 0.0
 _geocode_cache = {}
+_transient_failure_until = {}
+_GEOCODE_CACHE_SCHEMA_READY = False
+
+
+class GeocodingTemporarilyUnavailable(RuntimeError):
+    """Raised when Nominatim should not be contacted again yet."""
 
 # Aliases help geocoding understand activity names that are descriptions,
 # rather than the official name of a mapped place.
 ALIASES = {
     "goa": {
-        "beach visit": "popular beach",
-        "water sports": "water sports beach",
+        # Activity descriptions need a concrete, named map point. These are
+        # itinerary defaults, not a claim that every traveller selected them.
+        "beach visit": "Calangute Beach",
+        "water sports": "Baga Beach",
         "fort aguada and sinquerim visit": "Fort Aguada",
         "fontainhas heritage walk": "Fontainhas, Panaji",
         "basilica of bom jesus visit": "Basilica of Bom Jesus",
@@ -216,7 +237,8 @@ ALIASES = {
 
 DESTINATION_SEARCH_NAMES = {
     "andaman islands": "Port Blair, Andaman and Nicobar Islands",
-    "goa": "Panaji, Goa",
+    # Goa is a state-sized destination; do not constrain every search to Panaji.
+    "goa": "Goa, India",
     "manali": "Manali, Himachal Pradesh",
     "jaipur": "Jaipur, Rajasthan",
     "rishikesh": "Rishikesh, Uttarakhand",
@@ -256,14 +278,31 @@ def _get_json(url, timeout=REQUEST_TIMEOUT):
         return json.loads(response.read().decode("utf-8"))
 
 
-def _nominatim_search(query):
-    global _last_nominatim_request
+def _retry_after_seconds(error):
+    """Read Retry-After as seconds or an HTTP date; fall back conservatively."""
+    value = (getattr(error, "headers", None) or {}).get("Retry-After")
+    if value:
+        try:
+            return max(1.0, float(value.strip()))
+        except (TypeError, ValueError):
+            try:
+                retry_at = parsedate_to_datetime(value)
+                if retry_at.tzinfo is None:
+                    retry_at = retry_at.replace(tzinfo=timezone.utc)
+                return max(1.0, (retry_at - datetime.now(timezone.utc)).total_seconds())
+            except (TypeError, ValueError, OverflowError):
+                pass
+    return float(NOMINATIM_BACKOFF_SECONDS)
 
-    with _request_lock:
-        wait = NOMINATIM_DELAY_SECONDS - (time.monotonic() - _last_nominatim_request)
-        if wait > 0:
-            time.sleep(wait)
-        _last_nominatim_request = time.monotonic()
+
+def _nominatim_search(query):
+    """Search Nominatim with process-wide request spacing and backoff.
+
+    The lock covers both spacing and the network call so concurrent requests in
+    this process cannot start together. A 429 opens a cooldown instead of being
+    retried repeatedly. Transient network failures also pause additional calls.
+    """
+    global _last_nominatim_request, _nominatim_backoff_until
 
     params = urllib.parse.urlencode({
         "q": query,
@@ -272,7 +311,115 @@ def _nominatim_search(query):
         "addressdetails": 1,
         "countrycodes": "in",
     })
-    return _get_json(f"{NOMINATIM_URL}?{params}")
+    url = f"{NOMINATIM_URL}?{params}"
+
+    with _request_lock:
+        now = time.monotonic()
+        if now < _nominatim_backoff_until:
+            remaining = max(1, int(_nominatim_backoff_until - now))
+            raise GeocodingTemporarilyUnavailable(
+                f"Nominatim cooldown active ({remaining}s remaining)"
+            )
+
+        wait = NOMINATIM_DELAY_SECONDS - (now - _last_nominatim_request)
+        if wait > 0:
+            time.sleep(wait)
+        _last_nominatim_request = time.monotonic()
+
+        try:
+            return _get_json(url, timeout=REQUEST_TIMEOUT)
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                cooldown = _retry_after_seconds(exc)
+                _nominatim_backoff_until = time.monotonic() + cooldown
+                logger.warning(
+                    "Nominatim returned HTTP 429; pausing geocoding for %.0f seconds.",
+                    cooldown,
+                )
+                raise GeocodingTemporarilyUnavailable(
+                    f"Nominatim rate-limited this application for about {int(cooldown)}s"
+                ) from exc
+            if exc.code in (500, 502, 503, 504):
+                _nominatim_backoff_until = time.monotonic() + NETWORK_ERROR_COOLDOWN_SECONDS
+                raise GeocodingTemporarilyUnavailable(
+                    f"Nominatim returned HTTP {exc.code}; temporary cooldown enabled"
+                ) from exc
+            raise
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            _nominatim_backoff_until = time.monotonic() + NETWORK_ERROR_COOLDOWN_SECONDS
+            logger.warning(
+                "Nominatim network request failed; pausing geocoding for %s seconds: %s",
+                NETWORK_ERROR_COOLDOWN_SECONDS,
+                exc,
+            )
+            raise GeocodingTemporarilyUnavailable(
+                "Nominatim is temporarily unreachable"
+            ) from exc
+
+
+def _ensure_persistent_cache_schema(connection):
+    connection.execute(
+        """CREATE TABLE IF NOT EXISTS geocode_cache (
+               cache_key TEXT PRIMARY KEY,
+               payload TEXT NOT NULL,
+               created_at REAL NOT NULL
+           )"""
+    )
+
+
+def _persistent_cache_key(cache_key):
+    return json.dumps(list(cache_key), ensure_ascii=True, separators=(",", ":"))
+
+
+def _persistent_cache_get(cache_key):
+    """Read a successful cached place; failures never poison this cache."""
+    global _GEOCODE_CACHE_SCHEMA_READY
+    try:
+        with _cache_lock:
+            cache_dir = os.path.dirname(os.path.abspath(GEOCODE_CACHE_DB_PATH))
+            os.makedirs(cache_dir, exist_ok=True)
+            with sqlite3.connect(GEOCODE_CACHE_DB_PATH, timeout=2) as connection:
+                _ensure_persistent_cache_schema(connection)
+                row = connection.execute(
+                    "SELECT payload, created_at FROM geocode_cache WHERE cache_key = ?",
+                    (_persistent_cache_key(cache_key),),
+                ).fetchone()
+                _GEOCODE_CACHE_SCHEMA_READY = True
+                if not row:
+                    return None
+                payload, created_at = row
+                if time.time() - float(created_at) > GEOCODE_CACHE_TTL_SECONDS:
+                    connection.execute(
+                        "DELETE FROM geocode_cache WHERE cache_key = ?",
+                        (_persistent_cache_key(cache_key),),
+                    )
+                    return None
+                value = json.loads(payload)
+                return value if isinstance(value, dict) else None
+    except (OSError, sqlite3.Error, ValueError, TypeError) as exc:
+        logger.debug("Persistent geocoding cache unavailable: %s", exc)
+        return None
+
+
+def _persistent_cache_put(cache_key, place):
+    """Persist only successful matches, for reuse across API calls/restarts."""
+    try:
+        with _cache_lock:
+            cache_dir = os.path.dirname(os.path.abspath(GEOCODE_CACHE_DB_PATH))
+            os.makedirs(cache_dir, exist_ok=True)
+            with sqlite3.connect(GEOCODE_CACHE_DB_PATH, timeout=2) as connection:
+                _ensure_persistent_cache_schema(connection)
+                connection.execute(
+                    "INSERT OR REPLACE INTO geocode_cache (cache_key, payload, created_at) VALUES (?, ?, ?)",
+                    (
+                        _persistent_cache_key(cache_key),
+                        json.dumps(place, ensure_ascii=True),
+                        time.time(),
+                    ),
+                )
+    except (OSError, sqlite3.Error, ValueError, TypeError) as exc:
+        # Caching is an optimization; it must never fail itinerary generation.
+        logger.debug("Could not persist geocoding result: %s", exc)
 
 
 def _candidate_score(item, search_name, destination_name):
@@ -317,10 +464,21 @@ def _find_places(destination_name, activities):
         key = _clean_name(name)
         cache_key = (destination_key, key)
 
+        now = time.monotonic()
+        if _transient_failure_until.get(cache_key, 0.0) > now:
+            continue
+        _transient_failure_until.pop(cache_key, None)
+
         if cache_key in _geocode_cache:
             cached = _geocode_cache[cache_key]
             if cached:
                 found.setdefault(key, []).append(dict(cached))
+            continue
+
+        cached = _persistent_cache_get(cache_key)
+        if cached:
+            _geocode_cache[cache_key] = dict(cached)
+            found.setdefault(key, []).append(dict(cached))
             continue
 
         search_name = aliases.get(key)
@@ -347,6 +505,16 @@ def _find_places(destination_name, activities):
                 results = _nominatim_search(query)
                 if results:
                     break
+        except GeocodingTemporarilyUnavailable as exc:
+            # Do not cache a transient failure as a permanent no-match. Skip the
+            # remaining duplicate activity lookups during the active cooldown.
+            retry_at = max(
+                time.monotonic() + NETWORK_ERROR_COOLDOWN_SECONDS,
+                _nominatim_backoff_until,
+            )
+            _transient_failure_until[cache_key] = retry_at
+            logger.debug("Skipping temporary geocoding failure for %r: %s", name, exc)
+            continue
         except Exception as exc:
             logger.warning(
                 "Geocoding failed for %r in %s: %s",
@@ -354,7 +522,8 @@ def _find_places(destination_name, activities):
                 destination_name,
                 exc,
             )
-            _geocode_cache[cache_key] = None
+            # Keep a short cooldown for this activity, but let it retry later.
+            _transient_failure_until[cache_key] = time.monotonic() + NETWORK_ERROR_COOLDOWN_SECONDS
             continue
 
         if not results:
@@ -417,6 +586,7 @@ def _find_places(destination_name, activities):
             ),
         }
         _geocode_cache[cache_key] = dict(place)
+        _persistent_cache_put(cache_key, place)
         found.setdefault(key, []).append(place)
 
     return found
