@@ -1,74 +1,41 @@
-﻿import images from "../assets/images";
+import amritsarGoldenTemple from "../assets/images/amritsar-golden-temple.jpg";
+import images from "../assets/images";
 
-const { goa, manali, jaipur, rishikesh, kerala, coorg } = images;
-
-const destinations = [
-  {
-    id: 1,
-    name: "Goa",
-    location: "India",
-    category: "Beach",
-    tagline: "Golden shores. Endless sunsets.",
-    description: "Escape to sunlit beaches, peaceful coastlines, vibrant markets and unforgettable evenings.",
-    image: goa,
-    bestTime: "November – February",
-    budget: "₹15,000 – ₹30,000",
-  },
-  {
-    id: 2,
-    name: "Manali",
-    location: "Himachal Pradesh",
-    category: "Mountain",
-    tagline: "Wake up above the clouds.",
-    description: "Snow-covered mountains, quiet valleys and adventures surrounded by the Himalayas.",
-    image: manali,
-    bestTime: "October – June",
-    budget: "₹12,000 – ₹25,000",
-  },
-  {
-    id: 3,
-    name: "Kerala",
-    location: "India",
-    category: "Nature",
-    tagline: "Slow down. Breathe deeper.",
-    description: "Drift through peaceful backwaters, tropical forests and lush green landscapes.",
-    image: kerala,
-    bestTime: "September – March",
-    budget: "₹18,000 – ₹35,000",
-  },
-  {
-    id: 4,
-    name: "Coorg",
-    location: "Karnataka",
-    category: "Nature",
-    tagline: "Find yourself in the green.",
-    description: "Coffee plantations, misty hills and quiet forest roads make Coorg a natural escape.",
-    image: coorg,
-    bestTime: "October – March",
-    budget: "₹10,000 – ₹22,000",
-  },
-  {
-    id: 5,
-    name: "Rishikesh",
-    location: "Uttarakhand",
-    category: "Adventure",
-    tagline: "Where adventure meets peace.",
-    description: "Experience rivers, mountains, yoga, rafting and peaceful evenings beside the Ganges.",
-    image: rishikesh,
-    bestTime: "September – April",
-    budget: "₹10,000 – ₹20,000",
-  },
-  {
-    id: 6,
-    name: "Jaipur",
-    location: "Rajasthan",
-    category: "Heritage",
-    tagline: "Discover the Pink City.",
-    description: "Explore historic forts, royal palaces, colorful bazaars and Rajasthan's rich heritage.",
-    image: jaipur,
-    bestTime: "October – March",
-    budget: "₹10,000 – ₹25,000",
-  },
+const rawDestinations = [
+{"id":"D001","destinationId":"D001","name":"Goa","country":"India","state":"Goa","city":"Panaji","location":"Goa","category":"Beach","tagline":"Discover Goa","description":"Discover beautiful coastlines, local food and memorable seaside experiences.","image":"__LOCAL_IMAGE__goa","imageUrl":"https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Nov-Feb","budget":"₹2,500 per day (dataset estimate)","averageCost":2500,"rating":4.6,"latitude":15.4909,"longitude":73.8278},
+{"id":"D002","destinationId":"D002","name":"Manali","country":"India","state":"Himachal Pradesh","city":"Manali","location":"Himachal Pradesh","category":"Mountains","tagline":"Discover Manali","description":"Explore mountain scenery, peaceful valleys and memorable outdoor experiences.","image":"__LOCAL_IMAGE__manali","imageUrl":"https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Jun","budget":"₹2,200 per day (dataset estimate)","averageCost":2200,"rating":4.5,"latitude":32.2396,"longitude":77.1887},
+{"id":"D003","destinationId":"D003","name":"Jaipur","country":"India","state":"Rajasthan","city":"Jaipur","location":"Rajasthan","category":"Heritage","tagline":"Discover Jaipur","description":"Discover historic landmarks, local traditions and the destination\u0027s cultural heritage.","image":"__LOCAL_IMAGE__jaipur","imageUrl":"https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹2,000 per day (dataset estimate)","averageCost":2000,"rating":4.5,"latitude":26.9124,"longitude":75.7873},
+{"id":"D004","destinationId":"D004","name":"Rishikesh","country":"India","state":"Uttarakhand","city":"Rishikesh","location":"Uttarakhand","category":"Adventure","tagline":"Discover Rishikesh","description":"Explore outdoor activities, scenic landscapes and memorable adventures.","image":"__LOCAL_IMAGE__rishikesh","imageUrl":"https://images.unsplash.com/photo-1609948543911-3f3c7f9c9b3a?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Sep-Jun","budget":"₹1,800 per day (dataset estimate)","averageCost":1800,"rating":4.4,"latitude":30.0869,"longitude":78.2676},
+{"id":"D005","destinationId":"D005","name":"Munnar","country":"India","state":"Kerala","city":"Munnar","location":"Kerala","category":"Nature","tagline":"Discover Munnar","description":"Enjoy lush landscapes, scenic trails and peaceful natural surroundings.","image":"__LOCAL_IMAGE__kerala","imageUrl":"https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-May","budget":"₹2,300 per day (dataset estimate)","averageCost":2300,"rating":4.6,"latitude":10.0889,"longitude":77.0595},
+{"id":"D006","destinationId":"D006","name":"Udaipur","country":"India","state":"Rajasthan","city":"Udaipur","location":"Rajasthan","category":"Heritage","tagline":"Discover Udaipur","description":"Discover historic landmarks, local traditions and the destination\u0027s cultural heritage.","image":"https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹2,100 per day (dataset estimate)","averageCost":2100,"rating":4.6,"latitude":24.5854,"longitude":73.7125},
+{"id":"D007","destinationId":"D007","name":"Varanasi","country":"India","state":"Uttar Pradesh","city":"Varanasi","location":"Uttar Pradesh","category":"Spiritual","tagline":"Discover Varanasi","description":"Discover important spiritual sites, local traditions and a rich cultural atmosphere.","image":"https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹1,600 per day (dataset estimate)","averageCost":1600,"rating":4.4,"latitude":25.3176,"longitude":82.9739},
+{"id":"D008","destinationId":"D008","name":"Shimla","country":"India","state":"Himachal Pradesh","city":"Shimla","location":"Himachal Pradesh","category":"Mountains","tagline":"Discover Shimla","description":"Explore mountain scenery, peaceful valleys and memorable outdoor experiences.","image":"https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Mar-Jun","budget":"₹2,100 per day (dataset estimate)","averageCost":2100,"rating":4.4,"latitude":31.1048,"longitude":77.1734},
+{"id":"D009","destinationId":"D009","name":"Andaman Islands","country":"India","state":"Andaman and Nicobar Islands","city":"Port Blair","location":"Andaman and Nicobar Islands","category":"Beach","tagline":"Discover Andaman Islands","description":"Discover beautiful coastlines, local food and memorable seaside experiences.","image":"https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Nov-May","budget":"₹3,500 per day (dataset estimate)","averageCost":3500,"rating":4.7,"latitude":11.6234,"longitude":92.7265},
+{"id":"D010","destinationId":"D010","name":"Ladakh","country":"India","state":"Ladakh","city":"Leh","location":"Ladakh","category":"Adventure","tagline":"Discover Ladakh","description":"Explore outdoor activities, scenic landscapes and memorable adventures.","image":"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"May-Sep","budget":"₹3,000 per day (dataset estimate)","averageCost":3000,"rating":4.7,"latitude":34.1526,"longitude":77.5771},
+{"id":"D011","destinationId":"D011","name":"Delhi","country":"India","state":"Delhi","city":"New Delhi","location":"Delhi","category":"City","tagline":"Discover Delhi","description":"Explore city landmarks, local neighbourhoods, food and everyday life.","image":"https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹2,000 per day (dataset estimate)","averageCost":2000,"rating":4.3,"latitude":28.6139,"longitude":77.209},
+{"id":"D012","destinationId":"D012","name":"Mumbai","country":"India","state":"Maharashtra","city":"Mumbai","location":"Maharashtra","category":"City","tagline":"Discover Mumbai","description":"Explore city landmarks, local neighbourhoods, food and everyday life.","image":"https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Feb","budget":"₹3,000 per day (dataset estimate)","averageCost":3000,"rating":4.4,"latitude":19.076,"longitude":72.8777},
+{"id":"D013","destinationId":"D013","name":"Kolkata","country":"India","state":"West Bengal","city":"Kolkata","location":"West Bengal","category":"Culture","tagline":"Discover Kolkata","description":"Discover local art, traditions, food and cultural landmarks.","image":"https://images.unsplash.com/photo-1558431382-27e303142255?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1558431382-27e303142255?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹1,800 per day (dataset estimate)","averageCost":1800,"rating":4.3,"latitude":22.5726,"longitude":88.3639},
+{"id":"D014","destinationId":"D014","name":"Agra","country":"India","state":"Uttar Pradesh","city":"Agra","location":"Uttar Pradesh","category":"Heritage","tagline":"Discover Agra","description":"Discover historic landmarks, local traditions and the destination\u0027s cultural heritage.","image":"https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹1,700 per day (dataset estimate)","averageCost":1700,"rating":4.4,"latitude":27.1767,"longitude":78.0081},
+{"id":"D015","destinationId":"D015","name":"Amritsar","country":"India","state":"Punjab","city":"Amritsar","location":"Punjab","category":"Heritage","tagline":"Discover Amritsar","description":"Discover historic landmarks, local traditions and the destination\u0027s cultural heritage.","image": amritsarGoldenTemple,"imageUrl": "/images/amritsar-golden-temple.jpg","bestTime":"Oct-Mar","budget":"₹1,700 per day (dataset estimate)","averageCost":1700,"rating":4.5,"latitude":31.634,"longitude":74.8723},
+{"id":"D016","destinationId":"D016","name":"Coorg","country":"India","state":"Karnataka","city":"Madikeri","location":"Karnataka","category":"Nature","tagline":"Discover Coorg","description":"Enjoy lush landscapes, scenic trails and peaceful natural surroundings.","image":"__LOCAL_IMAGE__coorg","imageUrl":"https://images.unsplash.com/photo-1511497584788-876760111969?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-May","budget":"₹2,200 per day (dataset estimate)","averageCost":2200,"rating":4.5,"latitude":12.4244,"longitude":75.7382},
+{"id":"D017","destinationId":"D017","name":"Ooty","country":"India","state":"Tamil Nadu","city":"Ooty","location":"Tamil Nadu","category":"Nature","tagline":"Discover Ooty","description":"Enjoy lush landscapes, scenic trails and peaceful natural surroundings.","image":"https://images.unsplash.com/photo-1593693411515-c20261bcad6e?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1593693411515-c20261bcad6e?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Jun","budget":"₹2,000 per day (dataset estimate)","averageCost":2000,"rating":4.4,"latitude":11.4102,"longitude":76.695},
+{"id":"D018","destinationId":"D018","name":"Alappuzha","country":"India","state":"Kerala","city":"Alappuzha","location":"Kerala","category":"Backwaters","tagline":"Discover Alappuzha","description":"Explore tranquil waterways, scenic landscapes and local life.","image":"https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Nov-Feb","budget":"₹2,400 per day (dataset estimate)","averageCost":2400,"rating":4.5,"latitude":9.4981,"longitude":76.3388},
+{"id":"D019","destinationId":"D019","name":"Pushkar","country":"India","state":"Rajasthan","city":"Pushkar","location":"Rajasthan","category":"Spiritual","tagline":"Discover Pushkar","description":"Discover important spiritual sites, local traditions and a rich cultural atmosphere.","image":"https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Oct-Mar","budget":"₹1,600 per day (dataset estimate)","averageCost":1600,"rating":4.4,"latitude":26.4897,"longitude":74.5511},
+{"id":"D020","destinationId":"D020","name":"Darjeeling","country":"India","state":"West Bengal","city":"Darjeeling","location":"West Bengal","category":"Mountains","tagline":"Discover Darjeeling","description":"Explore mountain scenery, peaceful valleys and memorable outdoor experiences.","image":"https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","imageUrl":"https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format\u0026fit=crop\u0026w=1200\u0026q=80","bestTime":"Mar-May","budget":"₹2,100 per day (dataset estimate)","averageCost":2100,"rating":4.5,"latitude":27.041,"longitude":88.2663}
 ];
 
+const destinations = rawDestinations.map((destination) => {
+  const localImageKey = destination.image.startsWith("__LOCAL_IMAGE__")
+    ? destination.image.replace("__LOCAL_IMAGE__", "")
+    : null;
+
+  return {
+    ...destination,
+    image: localImageKey && images[localImageKey]
+      ? images[localImageKey]
+      : destination.image,
+  };
+});
+
 export default destinations;
+

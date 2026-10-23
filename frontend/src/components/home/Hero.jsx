@@ -1,4 +1,4 @@
-import { ArrowRight, Compass } from "lucide-react";
+﻿import { ArrowRight, Compass } from "lucide-react";
 
 function Hero() {
   return (
@@ -22,12 +22,12 @@ function Hero() {
           </p>
 
           <div className="hero-actions">
-            <a href="/plan-trip" className="btn btn-primary">
+            <a href="#plan-trip" className="btn btn-primary">
               Plan My Trip
               <ArrowRight size={18} />
             </a>
 
-            <a href="/explore" className="btn btn-secondary">
+            <a href="#explore" className="btn btn-secondary">
               Explore Destinations
             </a>
           </div>

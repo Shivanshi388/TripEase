@@ -24,7 +24,14 @@ function Login() {
         throw new Error("Login failed. Please try again.");
       }
       login(result.user, result.token);
-      window.location.hash = "my-trips";
+      const requestedRoute = sessionStorage.getItem("tripease_after_login");
+        sessionStorage.removeItem("tripease_after_login");
+
+        const validReturnRoute =
+          requestedRoute &&
+          /^(home|explore|recommendations|wishlist|my-trips|profile|plan-trip(?:\/D\d{3})?|destination\/D\d{3})$/.test(requestedRoute);
+
+        window.location.hash = validReturnRoute ? requestedRoute : "my-trips";
     } catch (err) {
       const message = err?.message || "Unable to log in. Check your details and try again.";
       setError(message);
@@ -74,7 +81,7 @@ function Login() {
             </div>
             <label htmlFor="trip-password">Password</label>
             <div className="trip-login-input">
-              <span aria-hidden="true">♙</span>
+              <span aria-hidden="true">🔒</span>
               <input id="trip-password" type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" required />
             </div>
             <p className="trip-login-signup"><a href="#forgot-password">Forgot your password?</a></p>
