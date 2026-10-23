@@ -1344,6 +1344,31 @@ select:focus {
 .my-trips-empty p { max-width: 430px; margin: 0 auto 22px; line-height: 1.7; }
 .my-trips-empty-icon { display: inline-grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: #f0e7da; color: #98704c; }
 .my-trips-secondary { margin: 8px; background: #e9eee8; color: #294b3d; }
+.my-trips-heading-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; }
+.my-trips-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid #efc5c0; border-radius: 999px; padding: 11px 16px;
+  background: #fff6f5; color: #a3332b; font: inherit; font-size: 13px;
+  font-weight: 700; cursor: pointer; transition: background .2s, transform .2s;
+}
+.my-trips-danger:hover:not(:disabled) { background: #fde8e5; transform: translateY(-1px); }
+.my-trips-danger:disabled { opacity: .6; cursor: wait; }
+.my-trips-select-all, .my-trip-select {
+  display: inline-flex; align-items: center; gap: 8px; color: #294b3d;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.my-trips-select-all { padding: 8px 4px; white-space: nowrap; }
+.my-trips-select input, .my-trips-select-all input {
+  width: 17px; height: 17px; accent-color: #2d6a4f; cursor: pointer;
+}
+.my-trip-select {
+  position: relative; z-index: 1; margin: 14px 16px 0; width: fit-content;
+  padding: 7px 10px; border: 1px solid #dce8df; border-radius: 999px;
+  background: #f7fbf8;
+}
+.my-trip-select input:disabled, .my-trips-select-all input:disabled { cursor: wait; }
+
+
 @media (max-width: 900px) {
   .my-trips-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .my-trips-hero { grid-template-columns: 1fr  .8fr; }

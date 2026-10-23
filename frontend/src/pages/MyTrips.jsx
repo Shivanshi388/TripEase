@@ -1,5 +1,5 @@
-﻿import { useCallback, useEffect, useState } from "react";
-import { MapPinned, Luggage, CalendarDays, Wallet, ArrowRight, Compass, Eye, Pencil } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { MapPinned, Luggage, CalendarDays, Wallet, ArrowRight, Compass, Eye, Pencil, Trash2 } from "lucide-react";
 import api from "../services/api";
 
 const destinationPhotos = {
@@ -38,6 +38,9 @@ function MyTrips() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [expandedTrip, setExpandedTrip] = useState(null);
+  const [clearingTrips, setClearingTrips] = useState(false);
+  const [selectedTripIds, setSelectedTripIds] = useState([]);
+  const [deletingSelectedTrips, setDeletingSelectedTrips] = useState(false);
 
   const loadTrips = useCallback(async () => {
     setError("");
@@ -58,6 +61,119 @@ function MyTrips() {
       setLoading(false);
     }
   }, []);
+
+  const toggleTripSelection = useCallback((tripId, checked) => {
+    const normalizedId = String(tripId);
+    setSelectedTripIds((current) => checked
+      ? (current.includes(normalizedId) ? current : [...current, normalizedId])
+      : current.filter((id) => id !== normalizedId));
+  }, []);
+
+  const toggleAllTripSelection = useCallback((checked) => {
+    setSelectedTripIds(checked
+      ? trips.map((trip) => String(trip._id || trip.id || trip.title))
+      : []);
+  }, [trips]);
+
+  const deleteSelectedTrips = useCallback(async () => {
+    if (!selectedTripIds.length || deletingSelectedTrips) return;
+
+    const selectedTrips = trips.filter((trip) =>
+      selectedTripIds.includes(String(trip._id || trip.id || trip.title))
+    );
+    if (!selectedTrips.length) {
+      setSelectedTripIds([]);
+      return;
+    }
+
+    const tripsWithoutIds = selectedTrips.filter((trip) => !(trip._id || trip.id));
+    if (tripsWithoutIds.length) {
+      setError("Unable to delete the selected trips because at least one trip is missing its ID.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Permanently delete ${selectedTrips.length} selected trip${selectedTrips.length === 1 ? "" : "s"}? Associated itinerary and expense records may also be deleted. This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingSelectedTrips(true);
+    setError("");
+    const deletedIds = [];
+    try {
+      for (const trip of selectedTrips) {
+        const tripId = trip._id || trip.id;
+        await api.delete(`/trips/${encodeURIComponent(tripId)}`);
+        deletedIds.push(String(tripId));
+      }
+      setTrips((current) => current.filter((trip) =>
+        !deletedIds.includes(String(trip._id || trip.id || trip.title))
+      ));
+      setSelectedTripIds([]);
+      setExpandedTrip(null);
+    } catch (err) {
+      setSelectedTripIds((current) => current.filter((id) => !deletedIds.includes(id)));
+      try {
+        const result = await api.get("/trips");
+        setTrips(Array.isArray(result.data) ? result.data : []);
+      } catch {
+        // Keep the existing list and show the deletion error below.
+      }
+      setError(
+        deletedIds.length
+          ? `Deleted ${deletedIds.length} of ${selectedTrips.length} selected trips. ${err.message || "A later deletion failed."}`
+          : (err.message || "Unable to delete the selected trips.")
+      );
+    } finally {
+      setDeletingSelectedTrips(false);
+    }
+  }, [selectedTripIds, deletingSelectedTrips, trips]);
+
+  const clearAllTrips = useCallback(async () => {
+    if (!trips.length || clearingTrips) return;
+
+    const confirmed = window.confirm(
+      `Remove all ${trips.length} trips from My Trips? This permanently deletes these saved trips and their associated expenses and itineraries. This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    const tripIds = trips.map((trip) => trip._id || trip.id);
+    if (tripIds.some((id) => !id)) {
+      setError("Unable to remove all trips because at least one trip is missing its ID.");
+      return;
+    }
+
+    setClearingTrips(true);
+    setError("");
+    let deletedCount = 0;
+
+    try {
+      // Use the existing per-trip endpoint so each deletion stays scoped to this signed-in user.
+      for (const tripId of tripIds) {
+        await api.delete(`/trips/${encodeURIComponent(tripId)}`);
+        deletedCount += 1;
+      }
+
+      setTrips([]);
+      setExpandedTrip(null);
+    } catch (err) {
+      const requestMessage = err.message || "Unable to remove your trips.";
+      // Refresh in case some earlier deletions succeeded before a later request failed.
+      try {
+        const result = await api.get("/trips");
+        setTrips(Array.isArray(result.data) ? result.data : []);
+      } catch {
+        // Keep the current list visible through the existing error state if refresh also fails.
+      }
+      setError(
+        deletedCount > 0
+          ? `Removed ${deletedCount} of ${tripIds.length} trips. ${requestMessage}`
+          : requestMessage
+      );
+    } finally {
+      setClearingTrips(false);
+    }
+  }, [trips, clearingTrips]);
 
   useEffect(() => {
     loadTrips();
@@ -81,7 +197,40 @@ function MyTrips() {
             <span className="my-trips-eyebrow">THE COLLECTION</span>
             <h2>My trips <span>{trips.length}</span></h2>
           </div>
-          <a href="#explore" className="my-trips-text-link">Discover places <ArrowRight size={16} /></a>
+          <div className="my-trips-heading-actions">
+            {trips.length > 0 && (
+              <>
+                <label className="my-trips-select-all">
+                  <input
+                    type="checkbox"
+                    checked={trips.length > 0 && selectedTripIds.length === trips.length}
+                    onChange={(event) => toggleAllTripSelection(event.target.checked)}
+                    disabled={loading || deletingSelectedTrips || clearingTrips}
+                  />
+                  Select all
+                </label>
+                {selectedTripIds.length > 0 && (
+                  <button
+                    type="button"
+                    className="my-trips-danger"
+                    onClick={deleteSelectedTrips}
+                    disabled={deletingSelectedTrips || clearingTrips || loading}
+                  >
+                    <Trash2 size={16} /> {deletingSelectedTrips ? "Deleting selected..." : `Delete selected (${selectedTripIds.length})`}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="my-trips-danger"
+                  onClick={clearAllTrips}
+                  disabled={clearingTrips || deletingSelectedTrips || loading}
+                >
+                  <Trash2 size={16} /> {clearingTrips ? "Removing trips..." : "Remove all trips"}
+                </button>
+              </>
+            )}
+            <a href="#explore" className="my-trips-text-link">Discover places <ArrowRight size={16} /></a>
+          </div>
         </div>
 
         {loading ? (
@@ -110,6 +259,16 @@ function MyTrips() {
 
               return (
                 <article className="my-trip-card" key={id}>
+                  <label className="my-trip-select">
+                    <input
+                      type="checkbox"
+                      checked={selectedTripIds.includes(String(id))}
+                      onChange={(event) => toggleTripSelection(id, event.target.checked)}
+                      disabled={deletingSelectedTrips || clearingTrips || loading}
+                      aria-label={`Select trip to ${destination}`}
+                    />
+                    <span>Select trip</span>
+                  </label>
                   <div className="my-trip-photo-wrap">
                     <img
                       className="my-trip-photo"

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import destinations from "../data/destinations";
 import api from "../services/api";
 
@@ -286,8 +286,8 @@ function PlanTrip({ destinationId }) {
                         {activity.duration_hours != null
                           ? ` · ${activity.duration_hours} hours`
                           : ""}
-                        {activity.avg_cost != null
-                          ? ` · ₹${Number(activity.avg_cost).toLocaleString("en-IN")}`
+                        {(activity.estimated_activity_cost ?? activity.avg_cost) != null
+                          ? ` · ₹${Number(activity.estimated_activity_cost ?? activity.avg_cost).toLocaleString("en-IN")}`
                           : ""}
                       </li>
                     ))}
@@ -303,6 +303,53 @@ function PlanTrip({ destinationId }) {
               </article>
             ))}
 
+            <section
+              aria-label="Estimated cost breakdown"
+              style={{ marginTop: 24, padding: 20, border: "1px solid #ddd", borderRadius: 10 }}
+            >
+              <h3>Estimated cost breakdown</h3>
+              {[
+                ["Activities", generatedPlan.estimated_activity_total],
+                ["Accommodation", generatedPlan.estimated_hotel_cost_for_trip],
+                ["Food", generatedPlan.estimated_food_cost_for_trip],
+                ["Local transport", generatedPlan.estimated_local_transport_cost_for_trip],
+              ].map(([label, amount]) => amount != null && (
+                <p key={label}>
+                  <strong>{label}:</strong> ₹{Number(amount).toLocaleString("en-IN")}
+                </p>
+              ))}
+            </section>
+
+            {Array.isArray(generatedPlan.hotel_options) && generatedPlan.hotel_options.length > 0 && (
+              <section style={{ marginTop: 24, padding: 20, border: "1px solid #ddd", borderRadius: 10 }}>
+                <h3>Accommodation options</h3>
+                <p>Sample-dataset options only; current prices and availability are not verified.</p>
+                {generatedPlan.hotel_options.map((hotel, index) => (
+                  <article key={`${hotel.hotel_name || "hotel"}-${index}`} style={{ padding: "12px 0", borderTop: "1px solid #eee" }}>
+                    <h4>{hotel.hotel_name || "Accommodation option"}</h4>
+                    <p>{hotel.hotel_type || "Stay"}{hotel.rating != null ? ` · ★ ${hotel.rating}` : ""}</p>
+                    <p><strong>Estimated per night:</strong> ₹{Number(hotel.estimated_price_per_night || 0).toLocaleString("en-IN")}</p>
+                    {hotel.distance_from_center_km != null && <p>{hotel.distance_from_center_km} km from the centre</p>}
+                    {hotel.amenities && <p>{hotel.amenities}</p>}
+                  </article>
+                ))}
+              </section>
+            )}
+
+            {Array.isArray(generatedPlan.intercity_transport_options) && generatedPlan.intercity_transport_options.length > 0 && (
+              <section style={{ marginTop: 24, padding: 20, border: "1px solid #ddd", borderRadius: 10 }}>
+                <h3>Intercity transport estimates</h3>
+                <p>These are dataset estimates, not live timetables, ticket prices, or bookings.</p>
+                {generatedPlan.intercity_transport_options.map((route, index) => (
+                  <article key={`${route.transport_mode || "transport"}-${index}`} style={{ padding: "12px 0", borderTop: "1px solid #eee" }}>
+                    <h4>{route.transport_mode || "Transport option"}</h4>
+                    <p>From {route.origin_city || "origin not specified"}{route.estimated_duration_hours != null ? ` · ${route.estimated_duration_hours} hours` : ""}{route.distance_km != null ? ` · ${route.distance_km} km` : ""}</p>
+                    <p><strong>Estimated fare:</strong> ₹{Number(route.estimated_cost || 0).toLocaleString("en-IN")}</p>
+                  </article>
+                ))}
+              </section>
+            )}
+
             <h3>
               Estimated total (excluding intercity travel):{" "}
               ₹{Number(
@@ -311,8 +358,7 @@ function PlanTrip({ destinationId }) {
             </h3>
 
             <p>
-              Costs are estimates from the project's sample datasets, not live
-              prices or confirmed bookings.
+              {generatedPlan.data_notice || "Costs are estimates from the project's sample datasets, not live prices or confirmed bookings."}
             </p>
 
             <button
