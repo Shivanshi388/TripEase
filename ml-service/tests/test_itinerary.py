@@ -29,7 +29,8 @@ def test_itinerary_success(mock_generate):
     mock_generate.assert_called_once_with(
         destination_id="D001",
         days=3,
-        budget_per_day=1500,
+        budget_per_day=1500.0,
+        travel_date=None,
     )
 
 
