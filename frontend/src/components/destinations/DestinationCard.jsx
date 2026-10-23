@@ -1,4 +1,5 @@
-﻿import { useState } from "react";
+﻿
+import { useState } from "react";
 import { Heart, X } from "lucide-react";
 import { useWishlist } from "../../context/WishlistContext";
 import { useAuth } from "../../context/AuthContext";
@@ -58,6 +59,8 @@ function DestinationCard({ destination }) {
         src={destination.image}
         alt={destination.name}
         className="destination-card-image"
+        width={380}
+        height={247}
       />
 
       <button

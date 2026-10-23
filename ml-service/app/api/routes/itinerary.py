@@ -1,4 +1,5 @@
-﻿from datetime import date
+﻿
+from datetime import date
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
@@ -7,7 +8,7 @@ from app.models.itinerary_generator import generate_itinerary
 
 router = APIRouter(
     prefix="/itinerary",
-    tags=["Itinerary Generation"]
+    tags=["Itinerary Generation"],
 )
 
 
@@ -25,7 +26,11 @@ def create_itinerary(request: ItineraryRequest):
             destination_id=request.destination_id,
             days=request.days,
             budget_per_day=request.budget_per_day,
-            travel_date=request.travel_date.isoformat() if request.travel_date else None
+            travel_date=(
+                request.travel_date.isoformat()
+                if request.travel_date
+                else None
+            ),
         )
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
